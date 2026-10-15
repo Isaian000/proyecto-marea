@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'emotional_record.dart';
+import 'flows/notifications/notifications_page.dart';
+import 'flows/profile/profile_page.dart';
 import 'onBoarding.dart';
 
 const navy = Color(0xFF1D2B33);
@@ -856,14 +858,27 @@ class TopHeader extends StatelessWidget {
           ),
         ),
         if (showProfile) ...[
-          const RoundIconButton(icon: Icons.notifications_none),
+          RoundIconButton(
+            icon: Icons.notifications_none,
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const NotificationsPage()),
+            ),
+          ),
           const SizedBox(width: 10),
-          const CircleAvatar(
-            radius: 22,
-            backgroundColor: gold,
-            child: Text(
-              'EM',
-              style: TextStyle(color: ink, fontWeight: FontWeight.bold),
+          InkWell(
+            borderRadius: BorderRadius.circular(24),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const ProfilePage()),
+            ),
+            child: const CircleAvatar(
+              radius: 22,
+              backgroundColor: gold,
+              child: Text(
+                'EM',
+                style: TextStyle(color: ink, fontWeight: FontWeight.bold),
+              ),
             ),
           ),
         ],

@@ -29,5 +29,22 @@ void main() {
 
     expect(find.text('Historial'), findsAtLeastNWidgets(1));
     expect(find.textContaining('Reunión larga'), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.home_outlined));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byIcon(Icons.notifications_none));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Notificaciones'), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.arrow_back));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('EM'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Mi perfil'), findsOneWidget);
+    await tester.tap(find.text('Información personal'));
+    await tester.pumpAndSettle();
+    expect(find.text('Guardar cambios'), findsOneWidget);
   });
 }
