@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:flutter_proyecto_marea/my_app.dart';
+import 'package:flutter_proyecto_marea/flows/diario/my_app.dart';
 
 void main() {
   testWidgets('muestra el registro diario y navega al historial', (

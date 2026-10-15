@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'emotional_record.dart';
-import 'flows/notifications/notifications_page.dart';
-import 'flows/profile/profile_page.dart';
-import 'onBoarding.dart';
+import '../notifications/notifications_page.dart';
+import '../profile/profile_page.dart';
+import '../comunity/groups.dart';
+import '../onBoarding/onBoarding.dart';
 
 const navy = Color(0xFF1D2B33);
 const navyLight = Color(0xFF253943);
@@ -114,7 +115,7 @@ class _DiaryShellState extends State<DiaryShell> {
       ),
       HistoryPage(records: records),
       const PatternsPage(),
-      const CommunityPage(),
+      const CommunityForumsPage(),
     ];
 
     return Scaffold(
@@ -792,38 +793,6 @@ class _TrackingPageState extends State<TrackingPage> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class CommunityPage extends StatelessWidget {
-  const CommunityPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SerifText('Comunidad', size: 28, weight: FontWeight.bold),
-          SizedBox(height: 6),
-          Text(
-            'Esta sección aún no tiene un diseño definido.',
-            style: TextStyle(color: muted),
-          ),
-          Spacer(),
-          Center(child: Icon(Icons.people_outline, size: 72, color: teal)),
-          SizedBox(height: 12),
-          Center(
-            child: Text(
-              'Próximamente',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-          ),
-          Spacer(),
-        ],
       ),
     );
   }

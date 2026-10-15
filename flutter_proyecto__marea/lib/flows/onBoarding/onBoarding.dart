@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'my_app.dart';
+import '../diario/my_app.dart';
 
 const slate = Color(0xFF7F97A8);
 const sand = Color(0xFFB9A88A);
