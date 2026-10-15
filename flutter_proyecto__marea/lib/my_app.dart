@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'emotional_record.dart';
+import 'onBoarding.dart';
 
 const navy = Color(0xFF1D2B33);
 const navyLight = Color(0xFF253943);
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
           bodyMedium: TextStyle(color: cream),
         ),
       ),
-      home: const DiaryShell(),
+      home: const OnboardingScreen(),
     );
   }
 }

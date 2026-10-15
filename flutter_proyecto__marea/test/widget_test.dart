@@ -14,6 +14,13 @@ void main() {
 
     await tester.pumpWidget(const MyApp());
 
+    for (var i = 0; i < 4; i++) {
+      await tester.tap(find.text('Siguiente'));
+      await tester.pumpAndSettle();
+    }
+    await tester.tap(find.text('Empezar'));
+    await tester.pumpAndSettle();
+
     expect(find.text('Hola, Elena'), findsOneWidget);
     expect(find.text('Guardar registro'), findsOneWidget);
 
