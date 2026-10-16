@@ -6,8 +6,7 @@ import '../../../widgets/diary_widgets.dart';
 import '../../group/screens/group_screen.dart';
 import 'forum_intro_screen.dart';
 
-// Pantalla principal de Comunidad: pestañas "Foros" y "Mis grupos".
-// Va dentro de DiaryShell, que ya pone la barra de navegación inferior.
+// comunidad con foros y mis grupos, dentro de diaryshell
 class CommunityForumsScreen extends StatefulWidget {
   const CommunityForumsScreen({super.key});
 
@@ -16,10 +15,10 @@ class CommunityForumsScreen extends StatefulWidget {
 }
 
 class _CommunityForumsScreenState extends State<CommunityForumsScreen> {
-  int _tab = 0; // 0 = Foros, 1 = Mis grupos
-  int _category = 0; // 0 = Ansiedad, 1 = Depresión, 2 = Social
+  int _tab = 0; // 0 foros, 1 mis grupos
+  int _category = 0; // 0 ansiedad, 1 depresion, 2 social
 
-  // Datos de cada categoría, en el mismo orden que _category.
+  // datos por categoria en el orden de _category
   final List<String> _forumNames = [
     'Foro de ansiedad',
     'Foro de depresión',
@@ -44,7 +43,7 @@ class _CommunityForumsScreenState extends State<CommunityForumsScreen> {
     });
   }
 
-  // Se llama al presionar "Unirse" en un foro público.
+  // abre el foro publico
   void _openForumIntro() {
     Widget page;
     if (_category == 0) {
@@ -72,7 +71,7 @@ class _CommunityForumsScreenState extends State<CommunityForumsScreen> {
     Navigator.push(context, MaterialPageRoute(builder: (context) => page));
   }
 
-  // Se llama al presionar "Mandar solicitud" en un foro privado.
+  // solicitud para foro privado
   void _sendRequest() {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
@@ -93,11 +92,11 @@ class _CommunityForumsScreenState extends State<CommunityForumsScreen> {
     );
   }
 
-  // Arma las 3 tarjetas de la categoría seleccionada.
+  // tarjetas de la categoria seleccionada
   List<Widget> _buildForumCards() {
     List<Widget> cards = [];
     for (int i = 1; i <= 3; i++) {
-      // El foro 1 siempre es público; el 2 solo en ansiedad; el 3 es privado.
+      // foro 1 publico, foro 2 publico solo en ansiedad, foro 3 privado
       bool isPublic = i == 1 || (i == 2 && _category == 0);
       cards.add(
         ForumCard(
@@ -196,4 +195,4 @@ class _CommunityForumsScreenState extends State<CommunityForumsScreen> {
   }
 }
 
-// Filtro de categoría: Ansiedad, Depresión, Social.
+// filtro de categoria

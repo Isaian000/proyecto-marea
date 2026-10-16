@@ -16,7 +16,7 @@ class AppColors {
   static const lightBackground = Color(0xFFE9E4DA);
   static const lightSurface = Color(0xFFDAD3C5);
 
-  // Nombres usados por los widgets del flujo de autenticacion.
+  // nombres usados en autenticacion
   static const dark = navy;
   static const darkSoft = navyLight;
   static const sage = teal;
@@ -27,7 +27,7 @@ class AppColors {
   static const gradientEnd = Color(0xFFE8955A);
 }
 
-// Alias compartidos para que los flujos existentes usen una sola fuente.
+// alias de colores compartidos
 const navy = AppColors.navy;
 const navyLight = AppColors.navyLight;
 const cream = AppColors.cream;

@@ -4,7 +4,7 @@ import '../core/app_colors.dart';
 import '../core/app_theme.dart';
 import 'diary_widgets.dart';
 
-// Componentes visuales reutilizables del flujo de bienvenida.
+// widgets del onboarding
 
 class OnboardingSlide extends StatelessWidget {
   const OnboardingSlide({
@@ -87,7 +87,7 @@ class Dot extends StatelessWidget {
   }
 }
 
-// Barra redondeada; left y right controlan dónde empieza y termina.
+// barra redondeada, left y right marcan inicio y fin
 class Bar extends StatelessWidget {
   const Bar({
     super.key,
@@ -130,7 +130,7 @@ class WelcomeArt extends StatelessWidget {
   }
 }
 
-// Campo blanco del formulario de FormArt.
+// campo blanco de formart
 class FormLine extends StatelessWidget {
   const FormLine({super.key});
 
@@ -270,7 +270,7 @@ class SecureArt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Círculos uno dentro de otro, cada uno un poco más claro.
+    // circulos concentricos, cada uno mas claro
     return Center(
       child: Container(
         width: 180,
@@ -312,7 +312,7 @@ class SecureArt extends StatelessWidget {
   }
 }
 
-// Punto de color de ReadyArt; left lo mueve a la derecha.
+// punto de color de readyart, left lo mueve a la derecha
 class ColorDot extends StatelessWidget {
   const ColorDot({super.key, required this.color, required this.left});
   final Color color;

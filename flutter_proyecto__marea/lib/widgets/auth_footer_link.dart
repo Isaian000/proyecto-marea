@@ -16,7 +16,7 @@ class AuthFooterLink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TEMP FIX
+    // temp fix
     return Column(
       children: [
         Text(text, textAlign: TextAlign.center, style: AppTextStyles.small),

@@ -97,5 +97,4 @@ class ForumIntroScreen extends StatelessWidget {
   }
 }
 
-// Círculos concéntricos del color del foro con el ícono de chat al centro.
-// Los anillos grandes se salen de la tarjeta y el Stack los recorta.
+// anillos del color del foro con icono de chat al centro

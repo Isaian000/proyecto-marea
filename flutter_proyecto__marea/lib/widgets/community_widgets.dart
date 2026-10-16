@@ -38,7 +38,7 @@ class CategoryChip extends StatelessWidget {
   }
 }
 
-// Círculo de color con el ícono de chat, usado en las tarjetas.
+// circulo de color con icono de chat
 class ChatCircle extends StatelessWidget {
   const ChatCircle({super.key, required this.color});
   final Color color;
@@ -54,7 +54,7 @@ class ChatCircle extends StatelessWidget {
   }
 }
 
-// "Público" con globo o "Privado" con candado.
+// etiqueta publico o privado
 class PrivacyLabel extends StatelessWidget {
   const PrivacyLabel({super.key, required this.isPublic});
   final bool isPublic;
@@ -78,7 +78,7 @@ class PrivacyLabel extends StatelessWidget {
   }
 }
 
-// Botón pequeño de las tarjetas: relleno (teal) o con borde.
+// boton de tarjeta relleno o con borde
 class CardButton extends StatelessWidget {
   const CardButton({
     super.key,
@@ -116,7 +116,7 @@ class CardButton extends StatelessWidget {
   }
 }
 
-// Tarjeta de un foro, ej. "Foro de ansiedad 1".
+// tarjeta de foro
 class ForumCard extends StatelessWidget {
   const ForumCard({
     super.key,
@@ -186,7 +186,7 @@ class ForumCard extends StatelessWidget {
   }
 }
 
-// Tarjeta de un grupo en "Mis grupos", ej. "Grupo Ansiedad".
+// tarjeta de grupo
 class GroupCard extends StatelessWidget {
   const GroupCard({
     super.key,
@@ -252,7 +252,7 @@ class GroupCard extends StatelessWidget {
   }
 }
 
-// "Hablemos de ansiedad / depresión / estrés social".
+// arte de las pantallas hablemos de
 
 class ForumIntroArt extends StatelessWidget {
   const ForumIntroArt({super.key, required this.color});
@@ -309,4 +309,4 @@ class ForumIntroArt extends StatelessWidget {
   }
 }
 
-// "Registro exitoso".
+// registro exitoso

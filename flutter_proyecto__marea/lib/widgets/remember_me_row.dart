@@ -1,4 +1,4 @@
-// widgets/auth/remember_me_row.dart
+// fila de recuerdame y olvide contrasena
 import 'package:flutter/material.dart';
 
 import '../core/app_colors.dart';
@@ -18,7 +18,7 @@ class RememberMeRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TEMP FIX
+    // temp fix
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

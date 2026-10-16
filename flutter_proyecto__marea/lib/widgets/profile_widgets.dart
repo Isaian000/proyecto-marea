@@ -38,8 +38,7 @@ class ProfileFormScaffold extends StatelessWidget {
                   color: AppColors.cream,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
-                // LOS CAMPOS HACEN SCROLL CON EL TECLADO ABIERTO Y EL BOTON
-                // DE GUARDAR SE QUEDA FIJO ABAJO
+                // campos con scroll y boton fijo abajo
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [

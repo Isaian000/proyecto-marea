@@ -1,9 +1,9 @@
-// widgets/common/marea_logo_mark.dart
+// logo de marea
 import 'package:flutter/material.dart';
 
 import '../core/app_colors.dart';
 
-/// La píldora con degradado y círculo blanco.
+// pildora con degradado y circulo blanco
 class MareaLogo extends StatelessWidget {
   final double width;
   const MareaLogo({super.key, this.width = 56});

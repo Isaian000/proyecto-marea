@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../core/app_colors.dart';
 
-/// Fondo oscuro + header arriba + hoja crema con body y footer anclado abajo.
+// fondo oscuro, header y hoja crema con footer abajo
 class AuthScaffold extends StatelessWidget {
   final Widget header;
   final Widget body;

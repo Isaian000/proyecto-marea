@@ -1,4 +1,4 @@
-// widgets/common/marea_button.dart
+// boton principal de auth
 import 'package:flutter/material.dart';
 
 import '../core/app_colors.dart';

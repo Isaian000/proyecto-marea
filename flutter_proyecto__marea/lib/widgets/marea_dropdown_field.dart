@@ -1,4 +1,4 @@
-// widgets/common/marea_dropdown_field.dart
+// dropdown con etiqueta
 import 'package:flutter/material.dart';
 
 import '../core/app_text_styles.dart';

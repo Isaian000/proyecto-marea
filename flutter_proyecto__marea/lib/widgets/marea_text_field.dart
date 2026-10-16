@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../core/app_text_styles.dart';
 
-/// Etiqueta arriba + input blanco. Si isPassword, incluye el ojito.
+// campo con etiqueta y ojo para contrasenas
 class MareaTextField extends StatefulWidget {
   final String label;
   final TextEditingController? controller;
