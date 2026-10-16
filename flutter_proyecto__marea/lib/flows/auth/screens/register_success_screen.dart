@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import '../core/app_colors.dart';
-import '../widgets/success_badge.dart';
-import '../core/app_text_styles.dart';
-import '../widgets/marea_button.dart';
+
+import '../../../core/app_colors.dart';
+import '../../../core/app_text_styles.dart';
+import '../../../widgets/marea_button.dart';
+import '../../../widgets/success_badge.dart';
+import '../../onboarding/screens/onboarding_screen.dart';
 
 class RegisterSuccessScreen extends StatelessWidget {
   const RegisterSuccessScreen({super.key});
@@ -22,8 +24,10 @@ class RegisterSuccessScreen extends StatelessWidget {
                   children: [
                     const SuccessBadge(),
                     const SizedBox(height: 28),
-                    Text('Registro completado',
-                        style: AppTextStyles.titleOnDark(26)),
+                    Text(
+                      'Registro completado',
+                      style: AppTextStyles.titleOnDark(26),
+                    ),
                     const SizedBox(height: 10),
                     Text(
                       'Tu cuenta está lista. Ya puedes empezar tu diario.',
@@ -35,9 +39,9 @@ class RegisterSuccessScreen extends StatelessWidget {
               ),
               MareaButton(
                 label: 'Comenzar',
-                onPressed: () {
-                  // fuga pal home pa
-                },
+                onPressed: () => Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+                ),
               ),
             ],
           ),

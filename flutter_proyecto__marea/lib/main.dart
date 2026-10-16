@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'flows/diario/my_app.dart';
+
+import 'app.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MareaApp());
 }

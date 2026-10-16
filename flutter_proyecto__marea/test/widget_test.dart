@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:flutter_proyecto_marea/flows/diario/my_app.dart';
+import 'package:flutter_proyecto_marea/app.dart';
 
 void main() {
   testWidgets('muestra el registro diario y navega al historial', (
@@ -12,7 +12,18 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
 
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(const MareaApp());
+
+    await tester.pump(const Duration(seconds: 2));
+    await tester.pumpAndSettle();
+    expect(find.text('Hola de nuevo'), findsOneWidget);
+
+    await tester.tap(find.text('Regístrate'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Crear cuenta'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Comenzar'));
+    await tester.pumpAndSettle();
 
     for (var i = 0; i < 4; i++) {
       await tester.tap(find.text('Siguiente'));

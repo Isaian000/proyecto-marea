@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../core/app_colors.dart';
-import '../../core/app_text_styles.dart';
+
+import '../core/app_colors.dart';
+import '../core/app_text_styles.dart';
 import 'marea_logo.dart';
 
 class AuthHeader extends StatelessWidget {
@@ -35,8 +36,11 @@ class AuthHeader extends StatelessWidget {
                   color: AppColors.darkSoft,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.arrow_back,
-                    size: 16, color: Colors.white),
+                child: const Icon(
+                  Icons.arrow_back,
+                  size: 16,
+                  color: Colors.white,
+                ),
               ),
             ),
           if (showLogo) const MareaLogo(width: 42),

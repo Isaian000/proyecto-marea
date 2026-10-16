@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import '../widgets/auth_scaffold.dart';
-import '../widgets/auth_header.dart';
-import '../widgets/marea_text_field.dart';
-import '../widgets/marea_dropdown_field.dart';
-import '../widgets/marea_button.dart';
-import '../widgets/auth_footer_link.dart';
+
+import '../../../widgets/auth_footer_link.dart';
+import '../../../widgets/auth_header.dart';
+import '../../../widgets/auth_scaffold.dart';
+import '../../../widgets/marea_button.dart';
+import '../../../widgets/marea_dropdown_field.dart';
+import '../../../widgets/marea_text_field.dart';
 import 'register_success_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -55,7 +56,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: MareaDropdownField<String>(
                   label: 'Género',
                   value: _gender,
-                  items: const ['Mujer', 'Hombre', 'No binario', 'Prefiero no decir'],
+                  items: const [
+                    'Mujer',
+                    'Hombre',
+                    'No binario',
+                    'Prefiero no decir',
+                  ],
                   onChanged: (v) => setState(() => _gender = v),
                 ),
               ),
@@ -69,8 +75,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           MareaButton(
             label: 'Crear cuenta',
             onPressed: () => Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                  builder: (_) => const RegisterSuccessScreen()),
+              MaterialPageRoute(builder: (_) => const RegisterSuccessScreen()),
             ),
           ),
         ],

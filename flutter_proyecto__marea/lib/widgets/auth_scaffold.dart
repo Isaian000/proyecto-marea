@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../core/app_colors.dart';
 
 /// Fondo oscuro + header arriba + hoja crema con body y footer anclado abajo.
@@ -28,8 +29,7 @@ class AuthScaffold extends StatelessWidget {
                 width: double.infinity,
                 decoration: const BoxDecoration(
                   color: AppColors.cream,
-                  borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(28)),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
                 child: CustomScrollView(
                   slivers: [
@@ -37,13 +37,7 @@ class AuthScaffold extends StatelessWidget {
                       hasScrollBody: false,
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
-                        child: Column(
-                          children: [
-                            body,
-                            const Spacer(),
-                            footer,
-                          ],
-                        ),
+                        child: Column(children: [body, const Spacer(), footer]),
                       ),
                     ),
                   ],

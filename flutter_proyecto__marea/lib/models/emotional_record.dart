@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Datos de un registro del diario emocional.
 class EmotionalRecord {
   const EmotionalRecord({
     required this.date,

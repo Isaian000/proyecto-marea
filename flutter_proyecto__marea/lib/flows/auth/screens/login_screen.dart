@@ -1,5 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../../../widgets/auth_footer_link.dart';
+import '../../../widgets/auth_header.dart';
+import '../../../widgets/auth_scaffold.dart';
+import '../../../widgets/marea_button.dart';
+import '../../../widgets/marea_text_field.dart';
+import '../../../widgets/remember_me_row.dart';
+import '../../diario/screens/diary_shell_screen.dart';
+import 'register_screen.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
   @override
@@ -46,15 +55,19 @@ class _LoginScreenState extends State<LoginScreen> {
             onForgotPassword: () {},
           ),
           const SizedBox(height: 24),
-          MareaButton(label: 'Iniciar sesión', onPressed: () {}),
+          MareaButton(
+            label: 'Iniciar sesión',
+            onPressed: () => Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const DiaryShellScreen()),
+            ),
+          ),
         ],
       ),
       footer: AuthFooterLink(
         text: '¿No tienes una cuenta?',
         actionLabel: 'Regístrate',
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => const RegisterScreen()),
-        ),
+        onTap: () => Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => const RegisterScreen())),
       ),
     );
   }

@@ -1,0 +1,311 @@
+import 'package:flutter/material.dart';
+
+import '../core/app_colors.dart';
+
+class CategoryChip extends StatelessWidget {
+  const CategoryChip({
+    super.key,
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: onTap,
+      style: TextButton.styleFrom(
+        backgroundColor: selected ? teal : navyLight,
+        foregroundColor: selected ? ink : cream,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        shape: const StadiumBorder(),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (selected) ...[
+            const Icon(Icons.check, size: 16),
+            const SizedBox(width: 4),
+          ],
+          Text(label, style: const TextStyle(fontSize: 13)),
+        ],
+      ),
+    );
+  }
+}
+
+// Círculo de color con el ícono de chat, usado en las tarjetas.
+class ChatCircle extends StatelessWidget {
+  const ChatCircle({super.key, required this.color});
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 42,
+      height: 42,
+      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+      child: const Icon(Icons.chat_bubble_outline, color: cream, size: 20),
+    );
+  }
+}
+
+// "Público" con globo o "Privado" con candado.
+class PrivacyLabel extends StatelessWidget {
+  const PrivacyLabel({super.key, required this.isPublic});
+  final bool isPublic;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(
+          isPublic ? Icons.public : Icons.lock_outline,
+          size: 16,
+          color: grey,
+        ),
+        const SizedBox(width: 6),
+        Text(
+          isPublic ? 'Público' : 'Privado',
+          style: const TextStyle(color: grey, fontSize: 13),
+        ),
+      ],
+    );
+  }
+}
+
+// Botón pequeño de las tarjetas: relleno (teal) o con borde.
+class CardButton extends StatelessWidget {
+  const CardButton({
+    super.key,
+    required this.label,
+    required this.filled,
+    required this.onPressed,
+  });
+  final String label;
+  final bool filled;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    const textStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 13);
+    if (filled) {
+      return FilledButton(
+        onPressed: onPressed,
+        style: FilledButton.styleFrom(
+          backgroundColor: teal,
+          foregroundColor: ink,
+        ),
+        child: Text(label, style: textStyle),
+      );
+    }
+    return OutlinedButton(
+      onPressed: onPressed,
+      style: OutlinedButton.styleFrom(
+        foregroundColor: ink,
+        side: const BorderSide(color: grey),
+      ),
+      child: Text(label, style: textStyle),
+    );
+  }
+}
+
+// Tarjeta de un foro, ej. "Foro de ansiedad 1".
+class ForumCard extends StatelessWidget {
+  const ForumCard({
+    super.key,
+    required this.title,
+    required this.subtitle,
+    required this.color,
+    required this.isPublic,
+    required this.onPressed,
+  });
+  final String title;
+  final String subtitle;
+  final Color color;
+  final bool isPublic;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: cream,
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              ChatCircle(color: color),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        color: ink,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle,
+                      style: const TextStyle(color: grey, fontSize: 13),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              PrivacyLabel(isPublic: isPublic),
+              CardButton(
+                label: isPublic ? 'Unirse' : 'Mandar solicitud',
+                filled: isPublic,
+                onPressed: onPressed,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Tarjeta de un grupo en "Mis grupos", ej. "Grupo Ansiedad".
+class GroupCard extends StatelessWidget {
+  const GroupCard({
+    super.key,
+    required this.name,
+    required this.members,
+    required this.color,
+    required this.isPublic,
+    required this.onPressed,
+  });
+  final String name;
+  final String members;
+  final Color color;
+  final bool isPublic;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: cream,
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              ChatCircle(color: color),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: const TextStyle(
+                        color: ink,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      members,
+                      style: const TextStyle(color: grey, fontSize: 13),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              PrivacyLabel(isPublic: isPublic),
+              CardButton(label: 'Entrar', filled: true, onPressed: onPressed),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// "Hablemos de ansiedad / depresión / estrés social".
+
+class ForumIntroArt extends StatelessWidget {
+  const ForumIntroArt({super.key, required this.color});
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 160,
+      width: double.infinity,
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: navyLight,
+        borderRadius: BorderRadius.circular(22),
+      ),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Positioned(
+            top: -90,
+            child: Container(
+              width: 340,
+              height: 340,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: .12),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+          Positioned(
+            top: -35,
+            child: Container(
+              width: 230,
+              height: 230,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: .22),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+          Container(
+            width: 112,
+            height: 112,
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+            child: const Icon(
+              Icons.chat_bubble_outline,
+              color: cream,
+              size: 36,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// "Registro exitoso".
