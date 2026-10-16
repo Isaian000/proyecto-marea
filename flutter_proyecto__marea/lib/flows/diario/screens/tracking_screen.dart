@@ -54,60 +54,63 @@ class _TrackingScreenState extends State<TrackingScreen> {
                   color: cream,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
-                child: SingleChildScrollView(
+                child: ListView(
                   padding: const EdgeInsets.all(24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      ChoiceGroup(
-                        question: '¿Cómo fue tu energía durante el día?',
-                        options: const [
-                          'Muy baja',
-                          'Baja',
-                          'Activa',
-                          'Muy activa',
-                        ],
-                        selected: energy,
-                        onSelected: (value) => setState(() => energy = value),
-                      ),
-                      const SizedBox(height: 24),
-                      ChoiceGroup(
-                        question: '¿Cómo calificas tu sueño de anoche?',
-                        options: const [
-                          'No dormí casi nada',
-                          'Dormí poco',
-                          'Dormí lo necesario',
-                          'Dormí excelente',
-                        ],
-                        selected: sleep,
-                        onSelected: (value) => setState(() => sleep = value),
-                      ),
-                      const SizedBox(height: 24),
-                      ChoiceGroup(
-                        question: '¿Cómo fueron tus pensamientos hoy?',
-                        options: const [
-                          'Negativos',
-                          'Algo negativos',
-                          'Neutrales',
-                          'Positivos',
-                        ],
-                        selected: thoughts,
-                        onSelected: (value) => setState(() => thoughts = value),
-                      ),
-                      const SizedBox(height: 60),
-                      PrimaryButton(
-                        label: 'Guardar seguimiento',
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Seguimiento guardado'),
-                            ),
-                          );
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                  ),
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        ChoiceGroup(
+                          question: '¿Cómo fue tu energía durante el día?',
+                          options: const [
+                            'Muy baja',
+                            'Baja',
+                            'Activa',
+                            'Muy activa',
+                          ],
+                          selected: energy,
+                          onSelected: (value) => setState(() => energy = value),
+                        ),
+                        const SizedBox(height: 24),
+                        ChoiceGroup(
+                          question: '¿Cómo calificas tu sueño de anoche?',
+                          options: const [
+                            'No dormí casi nada',
+                            'Dormí poco',
+                            'Dormí lo necesario',
+                            'Dormí excelente',
+                          ],
+                          selected: sleep,
+                          onSelected: (value) => setState(() => sleep = value),
+                        ),
+                        const SizedBox(height: 24),
+                        ChoiceGroup(
+                          question: '¿Cómo fueron tus pensamientos hoy?',
+                          options: const [
+                            'Negativos',
+                            'Algo negativos',
+                            'Neutrales',
+                            'Positivos',
+                          ],
+                          selected: thoughts,
+                          onSelected: (value) =>
+                              setState(() => thoughts = value),
+                        ),
+                        const SizedBox(height: 60),
+                        PrimaryButton(
+                          label: 'Guardar seguimiento',
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Seguimiento guardado'),
+                              ),
+                            );
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),

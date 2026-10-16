@@ -19,32 +19,34 @@ class OnboardingSlide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: double.infinity,
-            height: 300,
-            decoration: BoxDecoration(
-              color: surfaceColor(context),
-              borderRadius: BorderRadius.circular(22),
+    return ListView(
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: double.infinity,
+              height: 300,
+              decoration: BoxDecoration(
+                color: surfaceColor(context),
+                borderRadius: BorderRadius.circular(22),
+              ),
+              child: illustration,
             ),
-            child: illustration,
-          ),
-          const SizedBox(height: 28),
-          SerifText(title, size: 28, weight: FontWeight.w600),
-          const SizedBox(height: 12),
-          Text(
-            subtitle,
-            style: TextStyle(
-              color: mutedColor(context),
-              fontSize: 14,
-              height: 1.5,
+            const SizedBox(height: 28),
+            SerifText(title, size: 28, weight: FontWeight.w600),
+            const SizedBox(height: 12),
+            Text(
+              subtitle,
+              style: TextStyle(
+                color: mutedColor(context),
+                fontSize: 14,
+                height: 1.5,
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
+      ],
     );
   }
 }

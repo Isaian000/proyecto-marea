@@ -53,7 +53,7 @@ class GroupScreen extends StatelessWidget {
                 color: cream,
                 borderRadius: BorderRadius.circular(18),
               ),
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SerifText(
@@ -76,7 +76,11 @@ class GroupScreen extends StatelessWidget {
                     text:
                         'Confidencialidad: lo que se dice aquí, se queda aquí.',
                   ),
-                  Divider(color: Color(0xFFDDD5C7)),
+                  Container(
+                    height: 1,
+                    margin: EdgeInsets.symmetric(vertical: 8),
+                    color: Color(0xFFDDD5C7),
+                  ),
                   SizedBox(height: 8),
                   Text(
                     'Nivel de actividad',

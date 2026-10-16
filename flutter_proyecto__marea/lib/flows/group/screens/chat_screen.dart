@@ -129,7 +129,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 ],
               ),
             ),
-            Divider(height: 1, color: surfaceColor(context)),
+            Container(height: 1, color: surfaceColor(context)),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.all(20),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/app_colors.dart';
 import '../../../core/app_theme.dart';
 import '../../../models/emotional_record.dart';
 import '../../../widgets/diary_widgets.dart';
@@ -54,94 +55,129 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return cards;
   }
 
-  Future<void> pickDate(bool isFrom) async {
-    final current = isFrom ? from : to;
-    final selected = await showDatePicker(
-      context: context,
-      initialDate: current,
-      firstDate: DateTime(2025),
-      lastDate: DateTime(2026),
-    );
-    if (selected != null) {
-      setState(() {
-        if (isFrom) {
-          from = selected;
-        } else {
-          to = selected;
-        }
-      });
+  void selectDate(bool isFrom, DateTime date) {
+    setState(() {
+      if (isFrom) {
+        from = date;
+      } else {
+        to = date;
+      }
+    });
+  }
+
+  List<Widget> _buildDateOptions(bool isFrom, BuildContext dialogContext) {
+    DateTime current = isFrom ? from : to;
+    List<Widget> options = [];
+    for (int i = widget.records.length - 1; i >= 0; i--) {
+      DateTime date = widget.records[i].date;
+      options.add(
+        ListTile(
+          title: Text('${two(date.day)}/${two(date.month)}/${date.year}'),
+          trailing: date == current
+              ? const Icon(Icons.check, color: teal)
+              : null,
+          onTap: () {
+            selectDate(isFrom, date);
+            Navigator.pop(dialogContext);
+          },
+        ),
+      );
     }
+    return options;
+  }
+
+  void pickDate(bool isFrom) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text(isFrom ? 'Desde' : 'Hasta'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: _buildDateOptions(isFrom, dialogContext),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Cancelar'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final shown = visibleRecords;
-    return SingleChildScrollView(
+    return ListView(
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SerifText(
-                      'Historial',
-                      size: 28,
-                      weight: FontWeight.bold,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      dateFilter
-                          ? '${shown.length} registros entre estas fechas'
-                          : '5 registros esta semana',
-                      style: TextStyle(color: mutedColor(context)),
-                    ),
-                  ],
-                ),
-              ),
-              RoundIconButton(
-                icon: Icons.calendar_month_outlined,
-                selected: dateFilter,
-                onPressed: () => setState(() => dateFilter = !dateFilter),
-              ),
-            ],
-          ),
-          const SizedBox(height: 22),
-          SegmentedTabs(
-            labels: const ['Semana', 'Mes', 'Todo'],
-            selected: period,
-            onSelected: (value) => setState(() => period = value),
-          ),
-          if (dateFilter) ...[
-            const SizedBox(height: 14),
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: DateBox(
-                    label: 'Desde',
-                    value: from,
-                    onTap: () => pickDate(true),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SerifText(
+                        'Historial',
+                        size: 28,
+                        weight: FontWeight.bold,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        dateFilter
+                            ? '${shown.length} registros entre estas fechas'
+                            : '5 registros esta semana',
+                        style: TextStyle(color: mutedColor(context)),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: DateBox(
-                    label: 'Hasta',
-                    value: to,
-                    onTap: () => pickDate(false),
-                  ),
+                RoundIconButton(
+                  icon: Icons.calendar_month_outlined,
+                  selected: dateFilter,
+                  onPressed: () => setState(() => dateFilter = !dateFilter),
                 ),
               ],
             ),
+            const SizedBox(height: 22),
+            SegmentedTabs(
+              labels: const ['Semana', 'Mes', 'Todo'],
+              selected: period,
+              onSelected: (value) => setState(() => period = value),
+            ),
+            if (dateFilter) ...[
+              const SizedBox(height: 14),
+              Row(
+                children: [
+                  Expanded(
+                    child: DateBox(
+                      label: 'Desde',
+                      value: from,
+                      onTap: () => pickDate(true),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: DateBox(
+                      label: 'Hasta',
+                      value: to,
+                      onTap: () => pickDate(false),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+            const SizedBox(height: 14),
+            ..._buildRecordCards(shown),
           ],
-          const SizedBox(height: 14),
-          ..._buildRecordCards(shown),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

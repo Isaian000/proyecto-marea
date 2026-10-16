@@ -524,7 +524,7 @@ class SuggestedProfileCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 6),
-                    Flexible(
+                    Expanded(
                       child: Text(
                         online ? 'En línea' : 'Desconectado',
                         style: const TextStyle(color: grey, fontSize: 12),
@@ -592,9 +592,9 @@ class GlobalChatCard extends StatelessWidget {
           const SizedBox(height: 16),
           SizedBox(
             width: double.infinity,
-            child: OutlinedButton(
+            child: TextButton(
               onPressed: onPressed,
-              style: OutlinedButton.styleFrom(
+              style: TextButton.styleFrom(
                 foregroundColor: textColor(context),
                 side: BorderSide(color: mutedColor(context)),
                 padding: const EdgeInsets.symmetric(vertical: 14),
@@ -636,8 +636,11 @@ class MessageBubble extends StatelessWidget {
             ),
           ),
         Container(
-          constraints: const BoxConstraints(maxWidth: 260),
-          margin: const EdgeInsets.only(bottom: 12),
+          margin: EdgeInsets.only(
+            bottom: 12,
+            left: message.isMine ? 70 : 0,
+            right: message.isMine ? 0 : 70,
+          ),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
             color: message.isMine ? teal : cream,
@@ -672,14 +675,14 @@ class ChatInput extends StatelessWidget {
           child: DarkTextField(hint: hint, controller: controller),
         ),
         const SizedBox(width: 10),
-        IconButton.filled(
-          onPressed: onSend,
-          style: IconButton.styleFrom(
-            backgroundColor: teal,
-            foregroundColor: ink,
-            minimumSize: const Size(52, 52),
+        Container(
+          width: 52,
+          height: 52,
+          decoration: const BoxDecoration(color: teal, shape: BoxShape.circle),
+          child: IconButton(
+            onPressed: onSend,
+            icon: const Icon(Icons.send_outlined, color: ink),
           ),
-          icon: const Icon(Icons.send_outlined),
         ),
       ],
     );

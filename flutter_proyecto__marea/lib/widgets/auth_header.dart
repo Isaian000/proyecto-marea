@@ -26,21 +26,18 @@ class AuthHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (onBack != null)
-            InkWell(
-              onTap: onBack,
-              customBorder: const CircleBorder(),
-              child: Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: surfaceColor(context),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.arrow_back,
-                  size: 16,
-                  color: textColor(context),
-                ),
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: surfaceColor(context),
+                shape: BoxShape.circle,
+              ),
+              child: IconButton(
+                padding: EdgeInsets.zero,
+                iconSize: 16,
+                onPressed: onBack,
+                icon: Icon(Icons.arrow_back, color: textColor(context)),
               ),
             ),
           if (showLogo) const MareaLogo(width: 42),

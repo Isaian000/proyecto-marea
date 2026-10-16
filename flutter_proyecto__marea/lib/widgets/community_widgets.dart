@@ -94,19 +94,21 @@ class CardButton extends StatelessWidget {
   Widget build(BuildContext context) {
     const textStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 13);
     if (filled) {
-      return FilledButton(
+      return ElevatedButton(
         onPressed: onPressed,
-        style: FilledButton.styleFrom(
+        style: ElevatedButton.styleFrom(
           backgroundColor: teal,
           foregroundColor: ink,
+          elevation: 0,
         ),
         child: Text(label, style: textStyle),
       );
     }
-    return OutlinedButton(
+    return TextButton(
       onPressed: onPressed,
-      style: OutlinedButton.styleFrom(
+      style: TextButton.styleFrom(
         foregroundColor: ink,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         side: const BorderSide(color: grey),
       ),
       child: Text(label, style: textStyle),
@@ -169,9 +171,8 @@ class ForumCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              PrivacyLabel(isPublic: isPublic),
+              Expanded(child: PrivacyLabel(isPublic: isPublic)),
               CardButton(
                 label: isPublic ? 'Unirse' : 'Mandar solicitud',
                 filled: isPublic,
@@ -240,9 +241,8 @@ class GroupCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              PrivacyLabel(isPublic: isPublic),
+              Expanded(child: PrivacyLabel(isPublic: isPublic)),
               CardButton(label: 'Entrar', filled: true, onPressed: onPressed),
             ],
           ),

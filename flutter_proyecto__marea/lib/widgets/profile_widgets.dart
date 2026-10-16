@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../core/app_colors.dart';
 import '../core/app_theme.dart';
+import 'diary_widgets.dart';
 
 class ProfileFormScaffold extends StatelessWidget {
   const ProfileFormScaffold({
@@ -42,7 +43,7 @@ class ProfileFormScaffold extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Expanded(child: SingleChildScrollView(child: child)),
+                    Expanded(child: ListView(children: [child])),
                     const SizedBox(height: 16),
                     button,
                   ],
@@ -63,10 +64,9 @@ class ProfileBackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.centerLeft,
-      child: IconButton.filled(
-        style: IconButton.styleFrom(backgroundColor: surfaceColor(context)),
+      child: RoundIconButton(
+        icon: Icons.arrow_back,
         onPressed: () => Navigator.pop(context),
-        icon: Icon(Icons.arrow_back, color: textColor(context)),
       ),
     );
   }
@@ -105,31 +105,28 @@ class ProfileOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(17),
-      onTap: onTap,
-      child: Container(
+    return TextButton(
+      onPressed: onTap,
+      style: TextButton.styleFrom(
+        backgroundColor: surfaceColor(context),
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 17),
-        decoration: BoxDecoration(
-          color: surfaceColor(context),
-          borderRadius: BorderRadius.circular(17),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: textColor(context), size: 21),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Text(
-                label,
-                style: TextStyle(
-                  color: textColor(context),
-                  fontWeight: FontWeight.bold,
-                ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(17)),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: textColor(context), size: 21),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Text(
+              label,
+              style: TextStyle(
+                color: textColor(context),
+                fontWeight: FontWeight.bold,
               ),
             ),
-            Icon(Icons.chevron_right, color: mutedColor(context)),
-          ],
-        ),
+          ),
+          Icon(Icons.chevron_right, color: mutedColor(context)),
+        ],
       ),
     );
   }
@@ -263,10 +260,11 @@ class ProfileSaveButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 52,
-      child: FilledButton(
-        style: FilledButton.styleFrom(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.teal,
           foregroundColor: AppColors.ink,
+          elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(28),
           ),

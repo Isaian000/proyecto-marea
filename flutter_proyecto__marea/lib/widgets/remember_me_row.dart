@@ -24,22 +24,20 @@ class RememberMeRow extends StatelessWidget {
       children: [
         Row(
           children: [
-            SizedBox(
-              width: 20,
-              height: 20,
-              child: Checkbox(
-                value: value,
-                activeColor: AppColors.sage,
-                onChanged: (v) => onChanged(v ?? false),
-              ),
+            Switch(
+              value: value,
+              activeTrackColor: AppColors.sage,
+              inactiveTrackColor: Colors.white,
+              inactiveThumbColor: AppColors.textMuted,
+              onChanged: onChanged,
             ),
             const SizedBox(width: 8),
             Text('Recuérdame', style: AppTextStyles.small),
           ],
         ),
-        const SizedBox(height: 12),
-        GestureDetector(
-          onTap: onForgotPassword,
+        TextButton(
+          onPressed: onForgotPassword,
+          style: TextButton.styleFrom(padding: EdgeInsets.zero),
           child: Text(
             '¿Olvidaste tu contraseña?',
             style: AppTextStyles.smallBold,

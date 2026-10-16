@@ -43,13 +43,13 @@ class TopHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 10),
-          InkWell(
-            borderRadius: BorderRadius.circular(24),
-            onTap: () => Navigator.push(
+          IconButton(
+            padding: EdgeInsets.zero,
+            onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const ProfileScreen()),
             ),
-            child: const CircleAvatar(
+            icon: const CircleAvatar(
               radius: 22,
               backgroundColor: gold,
               child: Text(
@@ -254,10 +254,11 @@ class PrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SizedBox(
     height: 52,
-    child: FilledButton(
-      style: FilledButton.styleFrom(
+    child: ElevatedButton(
+      style: ElevatedButton.styleFrom(
         backgroundColor: teal,
         foregroundColor: ink,
+        elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
       ),
       onPressed: onPressed,
@@ -277,13 +278,15 @@ class RoundIconButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool selected;
   @override
-  Widget build(BuildContext context) => IconButton.filled(
-    style: IconButton.styleFrom(
-      backgroundColor: selected ? teal : surfaceColor(context),
-      foregroundColor: selected ? ink : textColor(context),
+  Widget build(BuildContext context) => Container(
+    decoration: BoxDecoration(
+      color: selected ? teal : surfaceColor(context),
+      shape: BoxShape.circle,
     ),
-    onPressed: onPressed ?? () {},
-    icon: Icon(icon),
+    child: IconButton(
+      onPressed: onPressed ?? () {},
+      icon: Icon(icon, color: selected ? ink : textColor(context)),
+    ),
   );
 }
 
@@ -319,22 +322,21 @@ class SegmentedTabs extends StatelessWidget {
     for (int i = 0; i < labels.length; i++) {
       tabs.add(
         Expanded(
-          child: InkWell(
-            borderRadius: BorderRadius.circular(20),
-            onTap: () => onSelected(i),
-            child: Container(
+          child: TextButton(
+            onPressed: () => onSelected(i),
+            style: TextButton.styleFrom(
+              backgroundColor: selected == i ? teal : Colors.transparent,
               padding: const EdgeInsets.symmetric(vertical: 11),
-              decoration: BoxDecoration(
-                color: selected == i ? teal : Colors.transparent,
+              shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Text(
-                labels[i],
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: selected == i ? ink : mutedColor(context),
-                  fontSize: 13,
-                ),
+            ),
+            child: Text(
+              labels[i],
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: selected == i ? ink : mutedColor(context),
+                fontSize: 13,
               ),
             ),
           ),
@@ -368,40 +370,38 @@ class DateBox extends StatelessWidget {
   final DateTime value;
   final VoidCallback onTap;
   @override
-  Widget build(BuildContext context) => InkWell(
-    borderRadius: BorderRadius.circular(14),
-    onTap: onTap,
-    child: Container(
+  Widget build(BuildContext context) => TextButton(
+    onPressed: onTap,
+    style: TextButton.styleFrom(
+      backgroundColor: surfaceColor(context),
+      foregroundColor: textColor(context),
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: surfaceColor(context),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: TextStyle(color: mutedColor(context), fontSize: 11),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  '${two(value.day)}/${two(value.month)}/${value.year}',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+    ),
+    child: Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: TextStyle(color: mutedColor(context), fontSize: 11),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                '${two(value.day)}/${two(value.month)}/${value.year}',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
-          Icon(
-            Icons.calendar_today_outlined,
-            color: mutedColor(context),
-            size: 18,
-          ),
-        ],
-      ),
+        ),
+        Icon(
+          Icons.calendar_today_outlined,
+          color: mutedColor(context),
+          size: 18,
+        ),
+      ],
     ),
   );
 }
@@ -411,55 +411,58 @@ class RecordCard extends StatelessWidget {
   final EmotionalRecord record;
   final VoidCallback onTap;
   @override
-  Widget build(BuildContext context) => InkWell(
-    borderRadius: BorderRadius.circular(20),
-    onTap: onTap,
-    child: CreamCard(
-      child: Row(
-        children: [
-          CircleAvatar(radius: 7, backgroundColor: record.color),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      '${shortDay(record.date.weekday)} · ${record.date.day} sep',
-                      style: const TextStyle(
-                        color: ink,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13,
-                      ),
+  Widget build(BuildContext context) => TextButton(
+    onPressed: onTap,
+    style: TextButton.styleFrom(
+      backgroundColor: cream,
+      foregroundColor: ink,
+      padding: const EdgeInsets.all(20),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+    ),
+    child: Row(
+      children: [
+        CircleAvatar(radius: 7, backgroundColor: record.color),
+        const SizedBox(width: 14),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    '${shortDay(record.date.weekday)} · ${record.date.day} sep',
+                    style: const TextStyle(
+                      color: ink,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
                     ),
-                    const SizedBox(width: 8),
-                    Text(
-                      record.moodLabel,
-                      style: const TextStyle(
-                        color: Color(0xFF777269),
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  record.note,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Color(0xFF777269),
-                    height: 1.4,
-                    fontSize: 13,
                   ),
+                  const SizedBox(width: 8),
+                  Text(
+                    record.moodLabel,
+                    style: const TextStyle(
+                      color: Color(0xFF777269),
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Text(
+                record.note,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: Color(0xFF777269),
+                  height: 1.4,
+                  fontSize: 13,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          const Icon(Icons.chevron_right, color: Color(0xFF777269)),
-        ],
-      ),
+        ),
+        const Icon(Icons.chevron_right, color: Color(0xFF777269)),
+      ],
     ),
   );
 }
@@ -483,9 +486,9 @@ class DetailRow extends StatelessWidget {
           : null,
     ),
     child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(label, style: const TextStyle(color: Color(0xFF777269))),
-        const Spacer(),
         Text(
           value,
           style: const TextStyle(color: ink, fontWeight: FontWeight.bold),
@@ -609,6 +612,34 @@ class WeeklyPattern extends StatelessWidget {
 class MonthlyPattern extends StatelessWidget {
   const MonthlyPattern({super.key, required this.colors});
   final List<Color> colors;
+
+  List<Widget> _buildWeeks(List<Color?> dots) {
+    List<Widget> weeks = [];
+    for (int week = 0; week < 4; week++) {
+      List<Widget> days = [];
+      for (int day = 0; day < 7; day++) {
+        Color? color = dots[week * 7 + day];
+        days.add(
+          Expanded(
+            child: Container(
+              height: 32,
+              margin: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: color ?? cream,
+                border: color == null
+                    ? Border.all(color: const Color(0xFFDDD5C7), width: 2)
+                    : null,
+              ),
+            ),
+          ),
+        );
+      }
+      weeks.add(Row(children: days));
+    }
+    return weeks;
+  }
+
   @override
   Widget build(BuildContext context) {
     final dots = <Color?>[
@@ -657,25 +688,7 @@ class MonthlyPattern extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 7,
-              mainAxisSpacing: 10,
-              crossAxisSpacing: 10,
-            ),
-            itemCount: dots.length,
-            itemBuilder: (_, index) => Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: dots[index] ?? cream,
-                border: dots[index] == null
-                    ? Border.all(color: const Color(0xFFDDD5C7), width: 2)
-                    : null,
-              ),
-            ),
-          ),
+          ..._buildWeeks(dots),
           const SizedBox(height: 16),
           Container(
             height: 7,
@@ -718,6 +731,57 @@ class ChoiceGroup extends StatelessWidget {
   final List<String> options;
   final int selected;
   final ValueChanged<int> onSelected;
+
+  Widget _buildOption(int index) {
+    return TextButton(
+      onPressed: () => onSelected(index),
+      style: TextButton.styleFrom(
+        backgroundColor: selected == index ? teal : Colors.white,
+        foregroundColor: ink,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
+        side: BorderSide(
+          color: selected == index ? teal : const Color(0xFFDDD5C7),
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
+      ),
+      child: Row(
+        children: [
+          if (selected == index) const Icon(Icons.check, color: ink, size: 17),
+          Expanded(
+            child: Text(
+              options[index],
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: ink, fontSize: 13),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _buildRows() {
+    List<Widget> rows = [];
+    for (int i = 0; i < options.length; i = i + 2) {
+      rows.add(
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: Row(
+            children: [
+              Expanded(child: _buildOption(i)),
+              const SizedBox(width: 8),
+              Expanded(
+                child: i + 1 < options.length
+                    ? _buildOption(i + 1)
+                    : const SizedBox(),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    return rows;
+  }
+
   @override
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -731,47 +795,7 @@ class ChoiceGroup extends StatelessWidget {
         ),
       ),
       const SizedBox(height: 10),
-      GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 3.2,
-          crossAxisSpacing: 8,
-          mainAxisSpacing: 10,
-        ),
-        itemCount: options.length,
-        itemBuilder: (_, index) => InkWell(
-          borderRadius: BorderRadius.circular(13),
-          onTap: () => onSelected(index),
-          child: Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: selected == index ? teal : Colors.white,
-              borderRadius: BorderRadius.circular(13),
-              border: Border.all(
-                color: selected == index ? teal : const Color(0xFFDDD5C7),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (selected == index) ...[
-                  const Icon(Icons.check, color: ink, size: 17),
-                  const SizedBox(width: 6),
-                ],
-                Flexible(
-                  child: Text(
-                    options[index],
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(color: ink, fontSize: 13),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+      ..._buildRows(),
     ],
   );
 }

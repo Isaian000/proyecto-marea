@@ -130,20 +130,20 @@ class _CommunityForumsScreenState extends State<CommunityForumsScreen> {
         ),
         const SizedBox(height: 16),
         if (_tab == 0) ...[
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
+          Row(
             children: [
               CategoryChip(
                 label: 'Ansiedad',
                 selected: _category == 0,
                 onTap: () => _selectCategory(0),
               ),
+              const SizedBox(width: 8),
               CategoryChip(
                 label: 'Depresión',
                 selected: _category == 1,
                 onTap: () => _selectCategory(1),
               ),
+              const SizedBox(width: 8),
               CategoryChip(
                 label: 'Social',
                 selected: _category == 2,

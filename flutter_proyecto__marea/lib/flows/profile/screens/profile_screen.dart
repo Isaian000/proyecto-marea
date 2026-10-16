@@ -19,74 +19,85 @@ class ProfileScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const ProfileBackButton(),
+              Expanded(
+                child: ListView(
+                  children: [
+                    const ProfileBackButton(),
+                    const SizedBox(height: 16),
+                    const ProfileScreenTitle('Mi perfil'),
+                    const SizedBox(height: 28),
+                    const CircleAvatar(
+                      radius: 48,
+                      backgroundColor: AppColors.gold,
+                      child: Text(
+                        'EM',
+                        style: TextStyle(
+                          color: AppColors.ink,
+                          fontFamily: 'Georgia',
+                          fontFamilyFallback: ['serif'],
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+                    Text(
+                      'Elena Martin',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: textColor(context),
+                        fontFamily: 'Georgia',
+                        fontFamilyFallback: ['serif'],
+                        fontSize: 21,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      'elenamartin52@gmail.com',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: mutedColor(context),
+                        fontSize: 15,
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    ProfileOption(
+                      icon: Icons.person_outline,
+                      label: 'Información personal',
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const PersonalInformationScreen(),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    ProfileOption(
+                      icon: Icons.lock_outline,
+                      label: 'Correo y contraseña',
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const AccountScreen(),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    ProfileOption(
+                      icon: Icons.info_outline,
+                      label: 'Nosotros',
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const AboutScreen()),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               const SizedBox(height: 16),
-              const ProfileScreenTitle('Mi perfil'),
-              const SizedBox(height: 28),
-              const CircleAvatar(
-                radius: 48,
-                backgroundColor: AppColors.gold,
-                child: Text(
-                  'EM',
-                  style: TextStyle(
-                    color: AppColors.ink,
-                    fontFamily: 'Georgia',
-                    fontFamilyFallback: ['serif'],
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 18),
-              Text(
-                'Elena Martin',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: textColor(context),
-                  fontFamily: 'Georgia',
-                  fontFamilyFallback: ['serif'],
-                  fontSize: 21,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                'elenamartin52@gmail.com',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: mutedColor(context), fontSize: 15),
-              ),
-              const SizedBox(height: 32),
-              ProfileOption(
-                icon: Icons.person_outline,
-                label: 'Información personal',
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const PersonalInformationScreen(),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-              ProfileOption(
-                icon: Icons.lock_outline,
-                label: 'Correo y contraseña',
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const AccountScreen()),
-                ),
-              ),
-              const SizedBox(height: 12),
-              ProfileOption(
-                icon: Icons.info_outline,
-                label: 'Nosotros',
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const AboutScreen()),
-                ),
-              ),
-              const Spacer(),
-              OutlinedButton.icon(
-                style: OutlinedButton.styleFrom(
+              TextButton(
+                style: TextButton.styleFrom(
                   foregroundColor: textColor(context),
                   side: const BorderSide(color: Color(0xFF718087)),
                   padding: const EdgeInsets.symmetric(vertical: 15),
@@ -95,10 +106,16 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
                 onPressed: () => logOut(context, 2),
-                icon: const Icon(Icons.logout, size: 18),
-                label: const Text(
-                  'Cerrar sesión',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.logout, size: 18),
+                    SizedBox(width: 8),
+                    Text(
+                      'Cerrar sesión',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
               ),
             ],

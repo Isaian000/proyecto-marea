@@ -8,7 +8,6 @@ class MareaTextField extends StatefulWidget {
   final TextEditingController? controller;
   final bool isPassword;
   final TextInputType keyboardType;
-  final String? Function(String?)? validator;
 
   const MareaTextField({
     super.key,
@@ -16,7 +15,6 @@ class MareaTextField extends StatefulWidget {
     this.controller,
     this.isPassword = false,
     this.keyboardType = TextInputType.text,
-    this.validator,
   });
 
   @override
@@ -33,11 +31,10 @@ class _MareaTextFieldState extends State<MareaTextField> {
       children: [
         Text(widget.label, style: AppTextStyles.label),
         const SizedBox(height: 6),
-        TextFormField(
+        TextField(
           controller: widget.controller,
           obscureText: widget.isPassword && _obscure,
           keyboardType: widget.keyboardType,
-          validator: widget.validator,
           style: AppTextStyles.input,
           decoration: InputDecoration(
             filled: true,

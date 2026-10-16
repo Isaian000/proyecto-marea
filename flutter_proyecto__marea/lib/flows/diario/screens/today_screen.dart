@@ -50,9 +50,9 @@ class _TodayScreenState extends State<TodayScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return ListView(
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 18),
-      child: widget.saved ? _savedView(context) : _formView(context),
+      children: [widget.saved ? _savedView(context) : _formView(context)],
     );
   }
 
@@ -158,47 +158,47 @@ class _TodayScreenState extends State<TodayScreen> {
           ),
         ),
         const SizedBox(height: 14),
-        InkWell(
-          borderRadius: BorderRadius.circular(18),
-          onTap: () => Navigator.push(
+        TextButton(
+          onPressed: () => Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => const TrackingScreen()),
           ),
-          child: Container(
+          style: TextButton.styleFrom(
+            backgroundColor: surfaceColor(context),
+            foregroundColor: textColor(context),
             padding: const EdgeInsets.all(18),
-            decoration: BoxDecoration(
-              color: surfaceColor(context),
+            shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(18),
             ),
-            child: Row(
-              children: [
-                Icon(Icons.monitor_heart_outlined),
-                SizedBox(width: 14),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Seguimiento del día',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
+          ),
+          child: Row(
+            children: [
+              Icon(Icons.monitor_heart_outlined),
+              SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Seguimiento del día',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
                       ),
-                      SizedBox(height: 4),
-                      Text(
-                        'Energía, sueño y pensamientos',
-                        style: TextStyle(
-                          color: mutedColor(context),
-                          fontSize: 13,
-                        ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      'Energía, sueño y pensamientos',
+                      style: TextStyle(
+                        color: mutedColor(context),
+                        fontSize: 13,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                Icon(Icons.chevron_right, color: mutedColor(context)),
-              ],
-            ),
+              ),
+              Icon(Icons.chevron_right, color: mutedColor(context)),
+            ],
           ),
         ),
         const SizedBox(height: 22),

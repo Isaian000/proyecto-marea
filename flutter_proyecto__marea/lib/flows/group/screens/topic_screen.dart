@@ -124,7 +124,7 @@ class _TopicScreenState extends State<TopicScreen> {
                 ],
               ),
             ),
-            Divider(height: 1, color: surfaceColor(context)),
+            Container(height: 1, color: surfaceColor(context)),
             Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
@@ -136,11 +136,12 @@ class _TopicScreenState extends State<TopicScreen> {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  FilledButton(
+                  ElevatedButton(
                     onPressed: _publish,
-                    style: FilledButton.styleFrom(
+                    style: ElevatedButton.styleFrom(
                       backgroundColor: teal,
                       foregroundColor: ink,
+                      elevation: 0,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 22,
                         vertical: 16,

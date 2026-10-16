@@ -20,9 +20,8 @@ class AuthFooterLink extends StatelessWidget {
     return Column(
       children: [
         Text(text, textAlign: TextAlign.center, style: AppTextStyles.small),
-        const SizedBox(height: 4),
-        GestureDetector(
-          onTap: onTap,
+        TextButton(
+          onPressed: onTap,
           child: Text(
             actionLabel,
             textAlign: TextAlign.center,
