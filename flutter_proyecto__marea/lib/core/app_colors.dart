@@ -13,6 +13,8 @@ class AppColors {
   static const slate = Color(0xFF7F97A8);
   static const grey = Color(0xFF7B868C);
   static const sand = Color(0xFFB9A88A);
+  static const lightBackground = Color(0xFFE9E4DA);
+  static const lightSurface = Color(0xFFDAD3C5);
 
   // Nombres usados por los widgets del flujo de autenticacion.
   static const dark = navy;

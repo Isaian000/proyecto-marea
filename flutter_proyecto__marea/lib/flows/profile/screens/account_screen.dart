@@ -34,6 +34,17 @@ class _AccountScreenState extends State<AccountScreen> {
   Widget build(BuildContext context) {
     return ProfileFormScaffold(
       title: 'Correo y contraseña',
+      button: ProfileSaveButton(
+        onPressed: () {
+          if (newPasswordController.text != confirmPasswordController.text) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Las contraseñas no coinciden')),
+            );
+            return;
+          }
+          saveAndReturn(context, 'Cuenta actualizada');
+        },
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -75,19 +86,6 @@ class _AccountScreenState extends State<AccountScreen> {
             controller: confirmPasswordController,
             visible: visible[2],
             onToggle: () => setState(() => visible[2] = !visible[2]),
-          ),
-          const Spacer(),
-          ProfileSaveButton(
-            onPressed: () {
-              if (newPasswordController.text !=
-                  confirmPasswordController.text) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Las contraseñas no coinciden')),
-                );
-                return;
-              }
-              saveAndReturn(context, 'Cuenta actualizada');
-            },
           ),
         ],
       ),

@@ -31,6 +31,9 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
   Widget build(BuildContext context) {
     return ProfileFormScaffold(
       title: 'Información personal',
+      button: ProfileSaveButton(
+        onPressed: () => saveAndReturn(context, 'Información guardada'),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -83,10 +86,6 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
             label: 'Dirección (opcional)',
             controller: addressController,
             hint: 'Calle, número y colonia',
-          ),
-          const Spacer(),
-          ProfileSaveButton(
-            onPressed: () => saveAndReturn(context, 'Información guardada'),
           ),
         ],
       ),

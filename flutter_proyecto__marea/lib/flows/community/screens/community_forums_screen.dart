@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/app_colors.dart';
 import '../../../widgets/community_widgets.dart';
 import '../../../widgets/diary_widgets.dart';
+import '../../group/screens/group_screen.dart';
 import 'forum_intro_screen.dart';
 
 // Pantalla principal de Comunidad: pestañas "Foros" y "Mis grupos".
@@ -78,6 +79,20 @@ class _CommunityForumsScreenState extends State<CommunityForumsScreen> {
       ..showSnackBar(const SnackBar(content: Text('Solicitud enviada')));
   }
 
+  void _openGroup(String name, String topic, String members, Color color) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GroupScreen(
+          name: name,
+          topic: topic,
+          members: members,
+          color: color,
+        ),
+      ),
+    );
+  }
+
   // Arma las 3 tarjetas de la categoría seleccionada.
   List<Widget> _buildForumCards() {
     List<Widget> cards = [];
@@ -139,27 +154,41 @@ class _CommunityForumsScreenState extends State<CommunityForumsScreen> {
           const SizedBox(height: 16),
           ..._buildForumCards(),
         ] else ...[
-          // "Entrar" abrirá la sección 06 (Dentro del grupo).
           GroupCard(
             name: 'Grupo Ansiedad',
             members: '345+ integrantes',
             color: slate,
             isPublic: true,
-            onPressed: () {},
+            onPressed: () => _openGroup(
+              'Grupo Ansiedad',
+              'Ansiedad',
+              '345+ integrantes',
+              slate,
+            ),
           ),
           GroupCard(
             name: 'Grupo Ansiedad Social',
             members: '78 integrantes',
             color: gold,
             isPublic: false,
-            onPressed: () {},
+            onPressed: () => _openGroup(
+              'Grupo Ansiedad Social',
+              'Ansiedad Social',
+              '78 integrantes',
+              gold,
+            ),
           ),
           GroupCard(
             name: 'Grupo Depresión',
             members: '145 integrantes',
             color: blue,
             isPublic: false,
-            onPressed: () {},
+            onPressed: () => _openGroup(
+              'Grupo Depresión',
+              'Depresión',
+              '145 integrantes',
+              blue,
+            ),
           ),
         ],
       ],

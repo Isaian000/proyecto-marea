@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/app_colors.dart';
+import '../../../core/app_theme.dart';
+
 import '../../../models/emotional_record.dart';
 import '../../../widgets/diary_widgets.dart';
 import 'record_detail_screen.dart';
@@ -71,7 +72,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       dateFilter
                           ? '${shown.length} registros entre estas fechas'
                           : '5 registros esta semana',
-                      style: const TextStyle(color: muted),
+                      style: TextStyle(color: mutedColor(context)),
                     ),
                   ],
                 ),

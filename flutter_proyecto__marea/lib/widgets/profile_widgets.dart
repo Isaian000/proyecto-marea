@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 
 import '../core/app_colors.dart';
+import '../core/app_theme.dart';
+import '../flows/auth/screens/login_screen.dart';
 
 class ProfileFormScaffold extends StatelessWidget {
   const ProfileFormScaffold({
     super.key,
     required this.title,
     required this.child,
+    required this.button,
   });
 
   final String title;
   final Widget child;
+  final Widget button;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.navy,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -35,7 +38,16 @@ class ProfileFormScaffold extends StatelessWidget {
                   color: AppColors.cream,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
-                child: child,
+                // LOS CAMPOS HACEN SCROLL CON EL TECLADO ABIERTO Y EL BOTON
+                // DE GUARDAR SE QUEDA FIJO ABAJO
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(child: SingleChildScrollView(child: child)),
+                    const SizedBox(height: 16),
+                    button,
+                  ],
+                ),
               ),
             ),
           ],
@@ -53,9 +65,9 @@ class ProfileBackButton extends StatelessWidget {
     return Align(
       alignment: Alignment.centerLeft,
       child: IconButton.filled(
-        style: IconButton.styleFrom(backgroundColor: AppColors.navyLight),
+        style: IconButton.styleFrom(backgroundColor: surfaceColor(context)),
         onPressed: () => Navigator.pop(context),
-        icon: const Icon(Icons.arrow_back, color: AppColors.cream),
+        icon: Icon(Icons.arrow_back, color: textColor(context)),
       ),
     );
   }
@@ -71,7 +83,6 @@ class ProfileScreenTitle extends StatelessWidget {
     return Text(
       text,
       style: const TextStyle(
-        color: AppColors.cream,
         fontFamily: 'Georgia',
         fontFamilyFallback: ['serif'],
         fontSize: 28,
@@ -101,23 +112,23 @@ class ProfileOption extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 17),
         decoration: BoxDecoration(
-          color: AppColors.navyLight,
+          color: surfaceColor(context),
           borderRadius: BorderRadius.circular(17),
         ),
         child: Row(
           children: [
-            Icon(icon, color: AppColors.cream, size: 21),
+            Icon(icon, color: textColor(context), size: 21),
             const SizedBox(width: 14),
             Expanded(
               child: Text(
                 label,
-                style: const TextStyle(
-                  color: AppColors.cream,
+                style: TextStyle(
+                  color: textColor(context),
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            const Icon(Icons.chevron_right, color: AppColors.muted),
+            Icon(Icons.chevron_right, color: mutedColor(context)),
           ],
         ),
       ),
@@ -286,7 +297,6 @@ class ProfileAboutSection extends StatelessWidget {
         Text(
           title,
           style: const TextStyle(
-            color: AppColors.cream,
             fontFamily: 'Georgia',
             fontFamilyFallback: ['serif'],
             fontSize: 20,
@@ -294,7 +304,7 @@ class ProfileAboutSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Text(text, style: const TextStyle(color: AppColors.muted, height: 1.5)),
+        Text(text, style: TextStyle(color: mutedColor(context), height: 1.5)),
       ],
     );
   }
@@ -322,4 +332,16 @@ InputDecoration profileInputDecoration(String? hint) {
 void saveAndReturn(BuildContext context, String message) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   Navigator.pop(context);
+}
+
+// BORRA TODAS LAS PANTALLAS ABIERTAS Y DEJA SOLO EL LOGIN PARA QUE
+// EL BOTON DE ATRAS NO REGRESE A LA SESION CERRADA
+void logOut(BuildContext context) {
+  ScaffoldMessenger.of(context)
+      .showSnackBar(const SnackBar(content: Text('Sesión cerrada')));
+  Navigator.pushAndRemoveUntil(
+    context,
+    MaterialPageRoute(builder: (context) => const LoginScreen()),
+    (route) => false,
+  );
 }

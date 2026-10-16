@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/app_colors.dart';
+import '../core/app_theme.dart';
 
 class SuccessBadge extends StatelessWidget {
   const SuccessBadge({super.key});
@@ -10,8 +11,8 @@ class SuccessBadge extends StatelessWidget {
     return Container(
       width: 96,
       height: 96,
-      decoration: const BoxDecoration(
-        color: AppColors.darkSoft,
+      decoration: BoxDecoration(
+        color: surfaceColor(context),
         shape: BoxShape.circle,
       ),
       child: const Icon(Icons.check, size: 36, color: AppColors.sage),

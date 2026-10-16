@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/app_colors.dart';
+import '../../../core/app_theme.dart';
+
 import '../../../widgets/notification_card.dart';
 
 class NotificationsScreen extends StatelessWidget {
@@ -9,7 +10,6 @@ class NotificationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.navy,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(24, 18, 24, 28),
@@ -20,17 +20,17 @@ class NotificationsScreen extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: IconButton.filled(
                   style: IconButton.styleFrom(
-                    backgroundColor: AppColors.navyLight,
+                    backgroundColor: surfaceColor(context),
                   ),
                   onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.arrow_back, color: AppColors.cream),
+                  icon: Icon(Icons.arrow_back, color: textColor(context)),
                 ),
               ),
-              const SizedBox(height: 16),
-              const Text(
+              SizedBox(height: 16),
+              Text(
                 'Notificaciones',
                 style: TextStyle(
-                  color: AppColors.cream,
+                  color: textColor(context),
                   fontFamily: 'Georgia',
                   fontFamilyFallback: ['serif'],
                   fontSize: 28,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/app_theme.dart';
+
 import '../../../core/app_colors.dart';
 import '../../../widgets/diary_widgets.dart';
 import 'tracking_screen.dart';
@@ -72,10 +74,10 @@ class _TodayScreenState extends State<TodayScreen> {
         const SizedBox(height: 24),
         Center(child: SerifText('Me siento $feeling', size: 26, italic: true)),
         const SizedBox(height: 10),
-        const Center(
+        Center(
           child: Text(
             'Desliza el punto en la marea para ajustar',
-            style: TextStyle(color: muted, fontSize: 13),
+            style: TextStyle(color: mutedColor(context), fontSize: 13),
           ),
         ),
         const SizedBox(height: 18),
@@ -166,10 +168,10 @@ class _TodayScreenState extends State<TodayScreen> {
           child: Container(
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
-              color: navyLight,
+              color: surfaceColor(context),
               borderRadius: BorderRadius.circular(18),
             ),
-            child: const Row(
+            child: Row(
               children: [
                 Icon(Icons.monitor_heart_outlined),
                 SizedBox(width: 14),
@@ -187,12 +189,15 @@ class _TodayScreenState extends State<TodayScreen> {
                       SizedBox(height: 4),
                       Text(
                         'Energía, sueño y pensamientos',
-                        style: TextStyle(color: muted, fontSize: 13),
+                        style: TextStyle(
+                          color: mutedColor(context),
+                          fontSize: 13,
+                        ),
                       ),
                     ],
                   ),
                 ),
-                Icon(Icons.chevron_right, color: muted),
+                Icon(Icons.chevron_right, color: mutedColor(context)),
               ],
             ),
           ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/app_theme.dart';
+
 import '../../../core/app_colors.dart';
 import '../../../widgets/profile_widgets.dart';
 
@@ -9,7 +11,6 @@ class AboutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.navy,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(24, 18, 24, 28),
@@ -45,10 +46,10 @@ class AboutScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 14),
-              const Text(
+              Text(
                 'Marea',
                 style: TextStyle(
-                  color: AppColors.cream,
+                  color: textColor(context),
                   fontFamily: 'Georgia',
                   fontFamilyFallback: ['serif'],
                   fontSize: 42,
@@ -56,9 +57,9 @@ class AboutScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 12),
-              const Text(
+              Text(
                 'Un espacio para cuidar tu bienestar mental.',
-                style: TextStyle(color: AppColors.muted, fontSize: 15),
+                style: TextStyle(color: mutedColor(context), fontSize: 15),
               ),
               const SizedBox(height: 28),
               const ProfileAboutSection(

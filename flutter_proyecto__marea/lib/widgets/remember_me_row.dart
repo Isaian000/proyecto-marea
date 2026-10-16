@@ -18,20 +18,26 @@ class RememberMeRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    // TEMP FIX
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          width: 20,
-          height: 20,
-          child: Checkbox(
-            value: value,
-            activeColor: AppColors.sage,
-            onChanged: (v) => onChanged(v ?? false),
-          ),
+        Row(
+          children: [
+            SizedBox(
+              width: 20,
+              height: 20,
+              child: Checkbox(
+                value: value,
+                activeColor: AppColors.sage,
+                onChanged: (v) => onChanged(v ?? false),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text('Recuérdame', style: AppTextStyles.small),
+          ],
         ),
-        const SizedBox(width: 8),
-        Text('Recuérdame', style: AppTextStyles.small),
-        const Spacer(),
+        const SizedBox(height: 12),
         GestureDetector(
           onTap: onForgotPassword,
           child: Text(

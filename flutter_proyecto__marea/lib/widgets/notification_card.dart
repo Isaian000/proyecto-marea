@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/app_colors.dart';
+import '../core/app_theme.dart';
 
 class NotificationSectionTitle extends StatelessWidget {
   const NotificationSectionTitle(this.text, {super.key});
@@ -11,7 +12,7 @@ class NotificationSectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: const TextStyle(color: AppColors.muted, fontSize: 13),
+      style: TextStyle(color: mutedColor(context), fontSize: 13),
     );
   }
 }

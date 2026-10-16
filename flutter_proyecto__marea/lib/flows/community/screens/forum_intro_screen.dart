@@ -28,7 +28,6 @@ class ForumIntroScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: navy,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(24, 18, 24, 24),

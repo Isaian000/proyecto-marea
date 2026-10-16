@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/app_theme.dart';
+
 import '../../../core/app_colors.dart';
 import '../../../widgets/diary_widgets.dart';
 
@@ -9,7 +11,6 @@ class ForumJoinedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: navy,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -32,10 +33,10 @@ class ForumJoinedScreen extends StatelessWidget {
                 weight: FontWeight.bold,
               ),
               const SizedBox(height: 8),
-              const Text(
+              Text(
                 'Tu registro en el foro se realizó con éxito.',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: muted, fontSize: 14),
+                style: TextStyle(color: mutedColor(context), fontSize: 14),
               ),
               const Spacer(),
               SizedBox(

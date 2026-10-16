@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/app_theme.dart';
+
 import '../../../core/app_colors.dart';
 import '../../../widgets/diary_widgets.dart';
 
@@ -40,9 +42,9 @@ class _TrackingScreenState extends State<TrackingScreen> {
                     weight: FontWeight.bold,
                   ),
                   const SizedBox(height: 4),
-                  const Text(
+                  Text(
                     'Tres preguntas rápidas sobre tu día',
-                    style: TextStyle(color: muted),
+                    style: TextStyle(color: mutedColor(context)),
                   ),
                 ],
               ),

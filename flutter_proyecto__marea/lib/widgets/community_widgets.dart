@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/app_colors.dart';
+import '../core/app_theme.dart';
 
 class CategoryChip extends StatelessWidget {
   const CategoryChip({
@@ -18,8 +19,8 @@ class CategoryChip extends StatelessWidget {
     return TextButton(
       onPressed: onTap,
       style: TextButton.styleFrom(
-        backgroundColor: selected ? teal : navyLight,
-        foregroundColor: selected ? ink : cream,
+        backgroundColor: selected ? teal : surfaceColor(context),
+        foregroundColor: selected ? ink : textColor(context),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         shape: const StadiumBorder(),
       ),
@@ -264,7 +265,7 @@ class ForumIntroArt extends StatelessWidget {
       width: double.infinity,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: navyLight,
+        color: surfaceColor(context),
         borderRadius: BorderRadius.circular(22),
       ),
       child: Stack(

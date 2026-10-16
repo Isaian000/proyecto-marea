@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/app_colors.dart';
+import '../core/app_theme.dart';
 import 'diary_widgets.dart';
 
 // Componentes visuales reutilizables del flujo de bienvenida.
@@ -26,7 +27,7 @@ class OnboardingSlide extends StatelessWidget {
             width: double.infinity,
             height: 300,
             decoration: BoxDecoration(
-              color: navyLight,
+              color: surfaceColor(context),
               borderRadius: BorderRadius.circular(22),
             ),
             child: illustration,
@@ -36,7 +37,11 @@ class OnboardingSlide extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             subtitle,
-            style: const TextStyle(color: muted, fontSize: 14, height: 1.5),
+            style: TextStyle(
+              color: mutedColor(context),
+              fontSize: 14,
+              height: 1.5,
+            ),
           ),
         ],
       ),
@@ -73,7 +78,7 @@ class Dot extends StatelessWidget {
       width: active ? 20 : 6,
       height: 6,
       decoration: BoxDecoration(
-        color: active ? teal : Colors.white24,
+        color: active ? teal : mutedColor(context).withValues(alpha: .4),
         borderRadius: BorderRadius.circular(3),
       ),
     );
@@ -244,12 +249,12 @@ class InterestChip extends StatelessWidget {
       decoration: BoxDecoration(
         color: selected ? teal : Colors.transparent,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: selected ? teal : cream),
+        border: Border.all(color: selected ? teal : textColor(context)),
       ),
       child: Text(
         label,
         style: TextStyle(
-          color: selected ? ink : cream,
+          color: selected ? ink : textColor(context),
           fontSize: 12,
           fontWeight: FontWeight.bold,
         ),
@@ -269,24 +274,24 @@ class SecureArt extends StatelessWidget {
         width: 180,
         height: 180,
         alignment: Alignment.center,
-        decoration: const BoxDecoration(
-          color: Colors.white10,
+        decoration: BoxDecoration(
+          color: textColor(context).withValues(alpha: .1),
           shape: BoxShape.circle,
         ),
         child: Container(
           width: 130,
           height: 130,
           alignment: Alignment.center,
-          decoration: const BoxDecoration(
-            color: Colors.white10,
+          decoration: BoxDecoration(
+            color: textColor(context).withValues(alpha: .1),
             shape: BoxShape.circle,
           ),
           child: Container(
             width: 86,
             height: 86,
             alignment: Alignment.center,
-            decoration: const BoxDecoration(
-              color: Colors.white10,
+            decoration: BoxDecoration(
+              color: textColor(context).withValues(alpha: .1),
               shape: BoxShape.circle,
             ),
             child: Container(

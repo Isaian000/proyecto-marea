@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/app_theme.dart';
+
 import '../../../core/app_colors.dart';
 import '../../../models/emotional_record.dart';
 import '../../../widgets/diary_widgets.dart';
@@ -32,7 +34,10 @@ class RecordDetailScreen extends StatelessWidget {
                 weight: FontWeight.bold,
               ),
               const SizedBox(height: 5),
-              const Text('Tu registro del día', style: TextStyle(color: muted)),
+              Text(
+                'Tu registro del día',
+                style: TextStyle(color: mutedColor(context)),
+              ),
               const SizedBox(height: 26),
               MoodSlider(value: record.mood),
               const SizedBox(height: 20),

@@ -16,13 +16,18 @@ class AuthFooterLink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    // TEMP FIX
+    return Column(
       children: [
-        Text('$text ', style: AppTextStyles.small),
+        Text(text, textAlign: TextAlign.center, style: AppTextStyles.small),
+        const SizedBox(height: 4),
         GestureDetector(
           onTap: onTap,
-          child: Text(actionLabel, style: AppTextStyles.smallBold),
+          child: Text(
+            actionLabel,
+            textAlign: TextAlign.center,
+            style: AppTextStyles.smallBold,
+          ),
         ),
       ],
     );

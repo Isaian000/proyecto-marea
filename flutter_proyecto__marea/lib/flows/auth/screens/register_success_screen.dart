@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/app_colors.dart';
+import '../../../core/app_theme.dart';
 import '../../../core/app_text_styles.dart';
 import '../../../widgets/marea_button.dart';
 import '../../../widgets/success_badge.dart';
@@ -12,7 +12,6 @@ class RegisterSuccessScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.dark,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -32,7 +31,9 @@ class RegisterSuccessScreen extends StatelessWidget {
                     Text(
                       'Tu cuenta está lista. Ya puedes empezar tu diario.',
                       textAlign: TextAlign.center,
-                      style: AppTextStyles.subtitleOnDark,
+                      style: AppTextStyles.subtitleOnDark.copyWith(
+                        color: mutedColor(context),
+                      ),
                     ),
                   ],
                 ),

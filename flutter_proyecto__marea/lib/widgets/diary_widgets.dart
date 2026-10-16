@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/app_colors.dart';
+import '../core/app_theme.dart';
 import '../flows/notifications/screens/notifications_screen.dart';
 import '../flows/profile/screens/profile_screen.dart';
 import '../models/emotional_record.dart';
@@ -28,7 +29,7 @@ class TopHeader extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 subtitle,
-                style: const TextStyle(color: muted, fontSize: 15),
+                style: TextStyle(color: mutedColor(context), fontSize: 15),
               ),
             ],
           ),
@@ -67,13 +68,13 @@ class SerifText extends StatelessWidget {
   const SerifText(
     this.text, {
     super.key,
-    this.color = cream,
+    this.color,
     this.size = 20,
     this.weight = FontWeight.normal,
     this.italic = false,
   });
   final String text;
-  final Color color;
+  final Color? color;
   final double size;
   final FontWeight weight;
   final bool italic;
@@ -154,11 +155,17 @@ class MoodSlider extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 6),
-        const Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Muy bajo', style: TextStyle(color: muted, fontSize: 12)),
-            Text('Muy bien', style: TextStyle(color: muted, fontSize: 12)),
+            Text(
+              'Muy bajo',
+              style: TextStyle(color: mutedColor(context), fontSize: 12),
+            ),
+            Text(
+              'Muy bien',
+              style: TextStyle(color: mutedColor(context), fontSize: 12),
+            ),
           ],
         ),
       ],
@@ -190,7 +197,10 @@ class WeekDots extends StatelessWidget {
             const SizedBox(height: 7),
             Text(
               labels[index],
-              style: TextStyle(color: index == 4 ? teal : muted, fontSize: 12),
+              style: TextStyle(
+                color: index == 4 ? teal : mutedColor(context),
+                fontSize: 12,
+              ),
             ),
           ],
         ),
@@ -208,17 +218,17 @@ class Quote extends StatelessWidget {
         ? CrossAxisAlignment.start
         : CrossAxisAlignment.center,
     children: [
-      const SerifText(
+      SerifText(
         '“Está bien no estar bien. Lo importante es\nseguir adelante.”',
-        color: muted,
+        color: mutedColor(context),
         size: 16,
         italic: true,
       ),
       if (alignedLeft) ...[
         const SizedBox(height: 8),
-        const Text(
+        Text(
           'Frase del día',
-          style: TextStyle(color: muted, fontSize: 12),
+          style: TextStyle(color: mutedColor(context), fontSize: 12),
         ),
       ],
     ],
@@ -261,8 +271,8 @@ class RoundIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => IconButton.filled(
     style: IconButton.styleFrom(
-      backgroundColor: selected ? teal : navyLight,
-      foregroundColor: selected ? ink : cream,
+      backgroundColor: selected ? teal : surfaceColor(context),
+      foregroundColor: selected ? ink : textColor(context),
     ),
     onPressed: onPressed ?? () {},
     icon: Icon(icon),
@@ -301,7 +311,7 @@ class SegmentedTabs extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: navyLight,
+        color: surfaceColor(context),
         borderRadius: BorderRadius.circular(24),
       ),
       child: Row(
@@ -321,7 +331,7 @@ class SegmentedTabs extends StatelessWidget {
                   labels[index],
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: selected == index ? ink : muted,
+                    color: selected == index ? ink : mutedColor(context),
                     fontSize: 13,
                   ),
                 ),
@@ -351,7 +361,7 @@ class DateBox extends StatelessWidget {
     child: Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: navyLight,
+        color: surfaceColor(context),
         borderRadius: BorderRadius.circular(14),
       ),
       child: Row(
@@ -360,7 +370,10 @@ class DateBox extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label, style: const TextStyle(color: muted, fontSize: 11)),
+                Text(
+                  label,
+                  style: TextStyle(color: mutedColor(context), fontSize: 11),
+                ),
                 const SizedBox(height: 4),
                 Text(
                   '${two(value.day)}/${two(value.month)}/${value.year}',
@@ -369,7 +382,11 @@ class DateBox extends StatelessWidget {
               ],
             ),
           ),
-          const Icon(Icons.calendar_today_outlined, color: muted, size: 18),
+          Icon(
+            Icons.calendar_today_outlined,
+            color: mutedColor(context),
+            size: 18,
+          ),
         ],
       ),
     ),
@@ -543,9 +560,9 @@ class WeeklyPattern extends StatelessWidget {
         ),
       ),
       const SizedBox(height: 16),
-      const Text(
+      Text(
         'Promedio por día',
-        style: TextStyle(color: muted, fontSize: 12),
+        style: TextStyle(color: mutedColor(context), fontSize: 12),
       ),
       const SizedBox(height: 10),
       Row(

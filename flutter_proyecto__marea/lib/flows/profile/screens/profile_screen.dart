@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/app_theme.dart';
+
 import '../../../core/app_colors.dart';
 import '../../../widgets/profile_widgets.dart';
 import 'about_screen.dart';
@@ -12,7 +14,6 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.navy,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(24, 18, 24, 32),
@@ -38,11 +39,11 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 18),
-              const Text(
+              Text(
                 'Elena Martin',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: AppColors.cream,
+                  color: textColor(context),
                   fontFamily: 'Georgia',
                   fontFamilyFallback: ['serif'],
                   fontSize: 21,
@@ -50,10 +51,10 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 6),
-              const Text(
+              Text(
                 'elenamartin52@gmail.com',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: AppColors.muted, fontSize: 15),
+                style: TextStyle(color: mutedColor(context), fontSize: 15),
               ),
               const SizedBox(height: 32),
               ProfileOption(
@@ -87,18 +88,14 @@ class ProfileScreen extends StatelessWidget {
               const Spacer(),
               OutlinedButton.icon(
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColors.cream,
+                  foregroundColor: textColor(context),
                   side: const BorderSide(color: Color(0xFF718087)),
                   padding: const EdgeInsets.symmetric(vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(28),
                   ),
                 ),
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Sesión cerrada')),
-                  );
-                },
+                onPressed: () => logOut(context),
                 icon: const Icon(Icons.logout, size: 18),
                 label: const Text(
                   'Cerrar sesión',

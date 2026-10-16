@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/app_colors.dart';
 import '../../../models/emotional_record.dart';
 import '../../community/screens/community_forums_screen.dart';
+import '../../settings/screens/settings_screen.dart';
 import 'history_screen.dart';
 import 'patterns_screen.dart';
 import 'today_screen.dart';
@@ -80,13 +81,14 @@ class _DiaryShellScreenState extends State<DiaryShellScreen> {
       HistoryScreen(records: records),
       const PatternsScreen(),
       const CommunityForumsScreen(),
+      const SettingsScreen(),
     ];
 
     return Scaffold(
       body: SafeArea(child: pages[selectedIndex]),
       bottomNavigationBar: NavigationBar(
         height: 82,
-        backgroundColor: navy,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         indicatorColor: teal,
         selectedIndex: selectedIndex,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
@@ -111,6 +113,11 @@ class _DiaryShellScreenState extends State<DiaryShellScreen> {
             icon: Icon(Icons.people_outline),
             selectedIcon: Icon(Icons.people),
             label: 'Comunidad',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.settings_outlined),
+            selectedIcon: Icon(Icons.settings),
+            label: 'Ajustes',
           ),
         ],
       ),

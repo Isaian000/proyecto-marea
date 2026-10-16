@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/app_colors.dart';
 import '../../../widgets/marea_brand.dart';
 import 'login_screen.dart';
 
@@ -29,9 +28,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: AppColors.dark,
-      body: Center(child: MareaBrand()),
-    );
+    return const Scaffold(body: Center(child: MareaBrand()));
   }
 }
