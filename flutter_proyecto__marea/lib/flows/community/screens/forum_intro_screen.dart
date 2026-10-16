@@ -19,7 +19,7 @@ class ForumIntroScreen extends StatelessWidget {
   final Color color;
 
   void _register(BuildContext context) {
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const ForumJoinedScreen()),
     );

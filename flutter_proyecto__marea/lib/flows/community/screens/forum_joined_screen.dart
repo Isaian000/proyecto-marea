@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/app_theme.dart';
-
 import '../../../core/app_colors.dart';
+import '../../../core/app_theme.dart';
 import '../../../widgets/diary_widgets.dart';
 
 class ForumJoinedScreen extends StatelessWidget {
@@ -43,7 +42,10 @@ class ForumJoinedScreen extends StatelessWidget {
                 width: double.infinity,
                 child: PrimaryButton(
                   label: 'Comenzar',
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
                 ),
               ),
             ],

@@ -6,23 +6,22 @@ import 'flows/auth/screens/splash_screen.dart';
 class MareaApp extends StatefulWidget {
   const MareaApp({super.key});
 
-  // BUSCA EL ESTADO DE MAREAAPP HACIA ARRIBA EN EL ARBOL PARA QUE
-  // CUALQUIER PANTALLA PUEDA LEER O CAMBIAR EL MODO OSCURO
-  static MareaAppState of(BuildContext context) {
-    return context.findAncestorStateOfType<MareaAppState>()!;
-  }
+  static bool darkMode = true;
+  static void Function(bool) changeDarkMode = (value) {};
 
   @override
-  State<MareaApp> createState() => MareaAppState();
+  State<MareaApp> createState() => _MareaAppState();
 }
 
-class MareaAppState extends State<MareaApp> {
-  bool darkMode = true;
-
-  void setDarkMode(bool value) {
-    setState(() {
-      darkMode = value;
-    });
+class _MareaAppState extends State<MareaApp> {
+  @override
+  void initState() {
+    super.initState();
+    MareaApp.changeDarkMode = (value) {
+      setState(() {
+        MareaApp.darkMode = value;
+      });
+    };
   }
 
   @override
@@ -32,7 +31,7 @@ class MareaAppState extends State<MareaApp> {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      themeMode: darkMode ? ThemeMode.dark : ThemeMode.light,
+      themeMode: MareaApp.darkMode ? ThemeMode.dark : ThemeMode.light,
       home: const SplashScreen(),
     );
   }

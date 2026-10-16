@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../widgets/marea_brand.dart';
@@ -11,23 +13,30 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  bool _showLogin = false;
+  Timer? _timer;
+
   @override
   void initState() {
     super.initState();
-    _openLogin();
+    _timer = Timer(const Duration(seconds: 2), () {
+      setState(() {
+        _showLogin = true;
+      });
+    });
   }
 
-  Future<void> _openLogin() async {
-    await Future<void>.delayed(const Duration(seconds: 2));
-    if (!mounted) return;
-
-    Navigator.of(
-      context,
-    ).pushReplacement(MaterialPageRoute(builder: (_) => const LoginScreen()));
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_showLogin) {
+      return const LoginScreen();
+    }
     return const Scaffold(body: Center(child: MareaBrand()));
   }
 }

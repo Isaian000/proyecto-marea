@@ -57,9 +57,9 @@ class _LoginScreenState extends State<LoginScreen> {
           const SizedBox(height: 24),
           MareaButton(
             label: 'Iniciar sesión',
-            onPressed: () => Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => const DiaryShellScreen()),
-            ),
+            onPressed: () => Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (_) => const DiaryShellScreen())),
           ),
         ],
       ),

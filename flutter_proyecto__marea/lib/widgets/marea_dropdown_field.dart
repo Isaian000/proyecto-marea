@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 
 import '../core/app_text_styles.dart';
 
-class MareaDropdownField<T> extends StatelessWidget {
+class MareaDropdownField extends StatelessWidget {
   final String label;
-  final T? value;
-  final List<T> items;
-  final ValueChanged<T?> onChanged;
+  final String? value;
+  final List<String> items;
+  final ValueChanged<String?> onChanged;
 
   const MareaDropdownField({
     super.key,
@@ -17,6 +17,14 @@ class MareaDropdownField<T> extends StatelessWidget {
     this.value,
   });
 
+  List<DropdownMenuItem<String>> _buildItems() {
+    List<DropdownMenuItem<String>> menuItems = [];
+    for (int i = 0; i < items.length; i++) {
+      menuItems.add(DropdownMenuItem(value: items[i], child: Text(items[i])));
+    }
+    return menuItems;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -24,7 +32,7 @@ class MareaDropdownField<T> extends StatelessWidget {
       children: [
         Text(label, style: AppTextStyles.label),
         const SizedBox(height: 6),
-        DropdownButtonFormField<T>(
+        DropdownButtonFormField<String>(
           initialValue: value,
           isExpanded: true,
           style: AppTextStyles.input,
@@ -42,9 +50,7 @@ class MareaDropdownField<T> extends StatelessWidget {
               borderSide: BorderSide.none,
             ),
           ),
-          items: items
-              .map((e) => DropdownMenuItem<T>(value: e, child: Text('$e')))
-              .toList(),
+          items: _buildItems(),
           onChanged: onChanged,
         ),
       ],

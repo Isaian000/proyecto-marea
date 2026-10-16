@@ -18,6 +18,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String? _country;
   String? _gender;
 
+  void _createAccount() {
+    NavigatorState navigator = Navigator.of(context);
+    navigator.pop();
+    navigator.push(
+      MaterialPageRoute(builder: (_) => const RegisterSuccessScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return AuthScaffold(
@@ -44,7 +52,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           Row(
             children: [
               Expanded(
-                child: MareaDropdownField<String>(
+                child: MareaDropdownField(
                   label: 'País',
                   value: _country,
                   items: const ['México', 'Colombia', 'Argentina', 'España'],
@@ -53,7 +61,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: MareaDropdownField<String>(
+                child: MareaDropdownField(
                   label: 'Género',
                   value: _gender,
                   items: const [
@@ -72,12 +80,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           const SizedBox(height: 14),
           const MareaTextField(label: 'Confirmar contraseña', isPassword: true),
           const SizedBox(height: 24),
-          MareaButton(
-            label: 'Crear cuenta',
-            onPressed: () => Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => const RegisterSuccessScreen()),
-            ),
-          ),
+          MareaButton(label: 'Crear cuenta', onPressed: _createAccount),
         ],
       ),
       footer: AuthFooterLink(

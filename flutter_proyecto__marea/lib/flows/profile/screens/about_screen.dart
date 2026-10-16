@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/app_theme.dart';
-
 import '../../../core/app_colors.dart';
+import '../../../core/app_theme.dart';
 import '../../../widgets/profile_widgets.dart';
 
 class AboutScreen extends StatelessWidget {

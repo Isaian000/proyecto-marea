@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/app_theme.dart';
 import '../../../core/app_text_styles.dart';
+import '../../../core/app_theme.dart';
 import '../../../widgets/marea_button.dart';
 import '../../../widgets/success_badge.dart';
 import '../../onboarding/screens/onboarding_screen.dart';
@@ -40,9 +40,13 @@ class RegisterSuccessScreen extends StatelessWidget {
               ),
               MareaButton(
                 label: 'Comenzar',
-                onPressed: () => Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => const OnboardingScreen()),
-                ),
+                onPressed: () {
+                  NavigatorState navigator = Navigator.of(context);
+                  navigator.pop();
+                  navigator.push(
+                    MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+                  );
+                },
               ),
             ],
           ),

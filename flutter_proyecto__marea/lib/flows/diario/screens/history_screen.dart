@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/app_theme.dart';
-
 import '../../../models/emotional_record.dart';
 import '../../../widgets/diary_widgets.dart';
 import 'record_detail_screen.dart';
@@ -23,9 +22,36 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   List<EmotionalRecord> get visibleRecords {
     if (!dateFilter) return widget.records;
-    return widget.records
-        .where((item) => !item.date.isBefore(from) && !item.date.isAfter(to))
-        .toList();
+    List<EmotionalRecord> result = [];
+    for (int i = 0; i < widget.records.length; i++) {
+      EmotionalRecord item = widget.records[i];
+      if (!item.date.isBefore(from) && !item.date.isAfter(to)) {
+        result.add(item);
+      }
+    }
+    return result;
+  }
+
+  List<Widget> _buildRecordCards(List<EmotionalRecord> records) {
+    List<Widget> cards = [];
+    for (int i = 0; i < records.length; i++) {
+      EmotionalRecord record = records[i];
+      cards.add(
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: RecordCard(
+            record: record,
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => RecordDetailScreen(record: record),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+    return cards;
   }
 
   Future<void> pickDate(bool isFrom) async {
@@ -113,20 +139,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             ),
           ],
           const SizedBox(height: 14),
-          ...shown.map(
-            (record) => Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: RecordCard(
-                record: record,
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => RecordDetailScreen(record: record),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          ..._buildRecordCards(shown),
         ],
       ),
     );

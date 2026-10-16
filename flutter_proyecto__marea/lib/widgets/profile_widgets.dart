@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../core/app_colors.dart';
 import '../core/app_theme.dart';
-import '../flows/auth/screens/login_screen.dart';
 
 class ProfileFormScaffold extends StatelessWidget {
   const ProfileFormScaffold({
@@ -224,6 +223,14 @@ class ProfileLabeledDropdown extends StatelessWidget {
   final List<String> options;
   final ValueChanged<String> onChanged;
 
+  List<DropdownMenuItem<String>> _buildItems() {
+    List<DropdownMenuItem<String>> items = [];
+    for (int i = 0; i < options.length; i++) {
+      items.add(DropdownMenuItem(value: options[i], child: Text(options[i])));
+    }
+    return items;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -237,12 +244,7 @@ class ProfileLabeledDropdown extends StatelessWidget {
           dropdownColor: Colors.white,
           style: const TextStyle(color: AppColors.ink),
           decoration: profileInputDecoration(null),
-          items: options
-              .map(
-                (option) =>
-                    DropdownMenuItem(value: option, child: Text(option)),
-              )
-              .toList(),
+          items: _buildItems(),
           onChanged: (newValue) {
             if (newValue != null) onChanged(newValue);
           },
@@ -334,14 +336,10 @@ void saveAndReturn(BuildContext context, String message) {
   Navigator.pop(context);
 }
 
-// BORRA TODAS LAS PANTALLAS ABIERTAS Y DEJA SOLO EL LOGIN PARA QUE
-// EL BOTON DE ATRAS NO REGRESE A LA SESION CERRADA
-void logOut(BuildContext context) {
+void logOut(BuildContext context, int screensToClose) {
   ScaffoldMessenger.of(context)
       .showSnackBar(const SnackBar(content: Text('Sesión cerrada')));
-  Navigator.pushAndRemoveUntil(
-    context,
-    MaterialPageRoute(builder: (context) => const LoginScreen()),
-    (route) => false,
-  );
+  for (int i = 0; i < screensToClose; i++) {
+    Navigator.pop(context);
+  }
 }

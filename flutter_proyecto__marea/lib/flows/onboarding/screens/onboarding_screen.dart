@@ -45,8 +45,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   void _next() {
     if (_page == 4) {
-      Navigator.pushReplacement(
-        context,
+      NavigatorState navigator = Navigator.of(context);
+      navigator.pop();
+      navigator.push(
         MaterialPageRoute(builder: (context) => const DiaryShellScreen()),
       );
     } else {

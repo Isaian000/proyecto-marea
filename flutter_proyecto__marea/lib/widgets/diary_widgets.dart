@@ -175,8 +175,8 @@ class MoodSlider extends StatelessWidget {
 
 class WeekDots extends StatelessWidget {
   const WeekDots({super.key});
-  @override
-  Widget build(BuildContext context) {
+
+  List<Widget> _buildDays(BuildContext context) {
     const labels = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
     const colors = [
       blue,
@@ -187,24 +187,32 @@ class WeekDots extends StatelessWidget {
       Color(0xFF40515A),
       Color(0xFF40515A),
     ];
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: List.generate(
-        labels.length,
-        (index) => Column(
+    List<Widget> days = [];
+    for (int i = 0; i < labels.length; i++) {
+      days.add(
+        Column(
           children: [
-            CircleAvatar(radius: 5, backgroundColor: colors[index]),
+            CircleAvatar(radius: 5, backgroundColor: colors[i]),
             const SizedBox(height: 7),
             Text(
-              labels[index],
+              labels[i],
               style: TextStyle(
-                color: index == 4 ? teal : mutedColor(context),
+                color: i == 4 ? teal : mutedColor(context),
                 fontSize: 12,
               ),
             ),
           ],
         ),
-      ),
+      );
+    }
+    return days;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: _buildDays(context),
     );
   }
 }
@@ -306,6 +314,36 @@ class SegmentedTabs extends StatelessWidget {
   final int selected;
   final ValueChanged<int> onSelected;
 
+  List<Widget> _buildTabs(BuildContext context) {
+    List<Widget> tabs = [];
+    for (int i = 0; i < labels.length; i++) {
+      tabs.add(
+        Expanded(
+          child: InkWell(
+            borderRadius: BorderRadius.circular(20),
+            onTap: () => onSelected(i),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 11),
+              decoration: BoxDecoration(
+                color: selected == i ? teal : Colors.transparent,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                labels[i],
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: selected == i ? ink : mutedColor(context),
+                  fontSize: 13,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+    return tabs;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -314,32 +352,7 @@ class SegmentedTabs extends StatelessWidget {
         color: surfaceColor(context),
         borderRadius: BorderRadius.circular(24),
       ),
-      child: Row(
-        children: List.generate(
-          labels.length,
-          (index) => Expanded(
-            child: InkWell(
-              borderRadius: BorderRadius.circular(20),
-              onTap: () => onSelected(index),
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 11),
-                decoration: BoxDecoration(
-                  color: selected == index ? teal : Colors.transparent,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  labels[index],
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: selected == index ? ink : mutedColor(context),
-                    fontSize: 13,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
+      child: Row(children: _buildTabs(context)),
     );
   }
 }
@@ -485,6 +498,43 @@ class DetailRow extends StatelessWidget {
 class WeeklyPattern extends StatelessWidget {
   const WeeklyPattern({super.key, required this.colors});
   final List<Color> colors;
+  List<Widget> _buildMoodDots() {
+    const heights = [50.0, 65.0, 82.0, 110.0, 66.0, 110.0, 126.0];
+    List<Widget> dots = [];
+    for (int i = 0; i < colors.length; i++) {
+      dots.add(
+        Padding(
+          padding: EdgeInsets.only(bottom: heights[i]),
+          child: CircleAvatar(radius: 7, backgroundColor: colors[i]),
+        ),
+      );
+    }
+    return dots;
+  }
+
+  List<Widget> _buildAverages() {
+    const labels = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
+    List<Widget> averages = [];
+    for (int i = 0; i < colors.length; i++) {
+      averages.add(
+        Container(
+          width: 43,
+          height: 38,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: colors[i],
+            borderRadius: BorderRadius.circular(11),
+          ),
+          child: Text(
+            labels[i],
+            style: const TextStyle(color: ink, fontWeight: FontWeight.bold),
+          ),
+        ),
+      );
+    }
+    return averages;
+  }
+
   @override
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -521,24 +571,7 @@ class WeeklyPattern extends StatelessWidget {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: List.generate(colors.length, (index) {
-                      final heights = [
-                        50.0,
-                        65.0,
-                        82.0,
-                        110.0,
-                        66.0,
-                        110.0,
-                        126.0,
-                      ];
-                      return Padding(
-                        padding: EdgeInsets.only(bottom: heights[index]),
-                        child: CircleAvatar(
-                          radius: 7,
-                          backgroundColor: colors[index],
-                        ),
-                      );
-                    }),
+                    children: _buildMoodDots(),
                   ),
                 ],
               ),
@@ -567,22 +600,7 @@ class WeeklyPattern extends StatelessWidget {
       const SizedBox(height: 10),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: List.generate(
-          colors.length,
-          (index) => Container(
-            width: 43,
-            height: 38,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: colors[index],
-              borderRadius: BorderRadius.circular(11),
-            ),
-            child: Text(
-              const ['L', 'M', 'M', 'J', 'V', 'S', 'D'][index],
-              style: const TextStyle(color: ink, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
+        children: _buildAverages(),
       ),
     ],
   );

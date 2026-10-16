@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/app_theme.dart';
-
 import '../../../core/app_colors.dart';
+import '../../../core/app_theme.dart';
 import '../../../widgets/diary_widgets.dart';
 import 'tracking_screen.dart';
 
@@ -25,14 +24,14 @@ class TodayScreen extends StatefulWidget {
 }
 
 class _TodayScreenState extends State<TodayScreen> {
-  late double mood;
-  late TextEditingController noteController;
+  double mood = 0;
+  TextEditingController noteController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     mood = widget.initialMood;
-    noteController = TextEditingController(text: widget.initialNote);
+    noteController.text = widget.initialNote;
   }
 
   @override

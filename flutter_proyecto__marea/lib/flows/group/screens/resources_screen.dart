@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/app_theme.dart';
-
 import '../../../widgets/group_widgets.dart';
 import 'article_screen.dart';
 

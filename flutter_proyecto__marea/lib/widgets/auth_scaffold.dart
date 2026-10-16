@@ -26,19 +26,16 @@ class AuthScaffold extends StatelessWidget {
             Expanded(
               child: Container(
                 width: double.infinity,
+                padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
                 decoration: const BoxDecoration(
                   color: AppColors.cream,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 ),
-                child: CustomScrollView(
-                  slivers: [
-                    SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
-                        child: Column(children: [body, const Spacer(), footer]),
-                      ),
-                    ),
+                child: Column(
+                  children: [
+                    Expanded(child: ListView(children: [body])),
+                    const SizedBox(height: 16),
+                    footer,
                   ],
                 ),
               ),

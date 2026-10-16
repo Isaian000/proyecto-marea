@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/app_theme.dart';
-
 import '../../../core/app_colors.dart';
+import '../../../core/app_theme.dart';
 import '../../../widgets/profile_widgets.dart';
 import 'about_screen.dart';
 import 'account_screen.dart';
@@ -95,7 +94,7 @@ class ProfileScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(28),
                   ),
                 ),
-                onPressed: () => logOut(context),
+                onPressed: () => logOut(context, 2),
                 icon: const Icon(Icons.logout, size: 18),
                 label: const Text(
                   'Cerrar sesión',
