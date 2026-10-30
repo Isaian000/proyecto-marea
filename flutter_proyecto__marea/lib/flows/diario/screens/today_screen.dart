@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/app_colors.dart';
 import '../../../core/app_theme.dart';
+import '../../../services/auth_service.dart';
 import '../../../widgets/diary_widgets.dart';
 import 'tracking_screen.dart';
 
@@ -56,12 +57,18 @@ class _TodayScreenState extends State<TodayScreen> {
     );
   }
 
+  // Saluda con el primer nombre del usuario que inició sesión.
+  String _greeting() {
+    final name = AuthService.displayName;
+    return name.isEmpty ? 'Hola' : 'Hola, ${name.split(' ').first}';
+  }
+
   Widget _formView(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const TopHeader(
-          title: 'Hola, Elena',
+        TopHeader(
+          title: _greeting(),
           subtitle: 'Viernes, 5 de septiembre',
           showProfile: true,
         ),

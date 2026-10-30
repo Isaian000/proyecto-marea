@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../core/app_colors.dart';
 import '../core/app_theme.dart';
+import '../services/auth_service.dart';
 import 'diary_widgets.dart';
 
 class ProfileFormScaffold extends StatelessWidget {
@@ -333,10 +334,11 @@ void saveAndReturn(BuildContext context, String message) {
   Navigator.pop(context);
 }
 
-void logOut(BuildContext context, int screensToClose) {
-  ScaffoldMessenger.of(context)
-      .showSnackBar(const SnackBar(content: Text('Sesión cerrada')));
-  for (int i = 0; i < screensToClose; i++) {
-    Navigator.pop(context);
-  }
+// Cierra sesión en Firebase y regresa al inicio; el AuthGate muestra el login.
+Future<void> logOut(BuildContext context) async {
+  final messenger = ScaffoldMessenger.of(context);
+  final navigator = Navigator.of(context);
+  await AuthService.signOut();
+  navigator.popUntil((route) => route.isFirst);
+  messenger.showSnackBar(const SnackBar(content: Text('Sesión cerrada')));
 }

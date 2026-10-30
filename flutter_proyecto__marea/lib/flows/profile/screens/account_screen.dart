@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/app_colors.dart';
+import '../../../services/auth_service.dart';
 import '../../../widgets/profile_widgets.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -11,13 +12,15 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
-  final nameController = TextEditingController(text: 'Elena Martin');
-  final emailController = TextEditingController(
-    text: 'elenamartin52@gmail.com',
+  final nameController = TextEditingController(
+    text: AuthService.currentUser?.displayName ?? '',
   );
-  final currentPasswordController = TextEditingController(text: '12345678');
-  final newPasswordController = TextEditingController(text: '87654321');
-  final confirmPasswordController = TextEditingController(text: '87654321');
+  final emailController = TextEditingController(
+    text: AuthService.currentUser?.email ?? '',
+  );
+  final currentPasswordController = TextEditingController();
+  final newPasswordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
   final visible = [false, false, false];
 
   @override

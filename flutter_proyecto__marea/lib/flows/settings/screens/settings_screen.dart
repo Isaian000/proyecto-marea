@@ -61,7 +61,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ProfileOption(
           icon: Icons.logout,
           label: 'Cerrar sesión',
-          onTap: () => logOut(context, 1),
+          onTap: () => logOut(context),
         ),
       ],
     );

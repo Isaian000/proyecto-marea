@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../widgets/diary_widgets.dart';
 import '../../../widgets/onboarding_widgets.dart';
-import '../../diario/screens/diary_shell_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -45,11 +44,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   void _next() {
     if (_page == 4) {
-      NavigatorState navigator = Navigator.of(context);
-      navigator.pop();
-      navigator.push(
-        MaterialPageRoute(builder: (context) => const DiaryShellScreen()),
-      );
+      // El AuthGate ya muestra el diario debajo; solo cerramos el onboarding.
+      Navigator.of(context).pop();
     } else {
       setState(() {
         _page = _page + 1;

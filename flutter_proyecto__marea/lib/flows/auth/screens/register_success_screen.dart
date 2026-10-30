@@ -29,7 +29,7 @@ class RegisterSuccessScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      'Tu cuenta está lista. Ya puedes empezar tu diario.',
+                      'Tu cuenta está lista. Te enviamos un correo para verificar tu dirección.',
                       textAlign: TextAlign.center,
                       style: AppTextStyles.subtitleOnDark.copyWith(
                         color: mutedColor(context),

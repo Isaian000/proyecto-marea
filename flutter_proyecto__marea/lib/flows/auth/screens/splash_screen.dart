@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../widgets/marea_brand.dart';
-import 'login_screen.dart';
+import 'auth_gate.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -35,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     if (_showLogin) {
-      return const LoginScreen();
+      return const AuthGate();
     }
     return const Scaffold(body: Center(child: MareaBrand()));
   }
