@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../services/auth_service.dart';
+import '../../../services/user_service.dart';
 import '../../../widgets/auth_footer_link.dart';
 import '../../../widgets/auth_header.dart';
 import '../../../widgets/auth_scaffold.dart';
@@ -63,6 +64,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
         setState(() => _loading = false);
       }
       return;
+    }
+
+    // Guarda el resto de los datos del formulario en Firestore (users/{uid}).
+    final uid = AuthService.currentUser?.uid;
+    if (uid != null) {
+      try {
+        await UserService.saveProfile(
+          uid,
+          nombre: _name.text,
+          apellido: _lastName.text,
+          email: _email.text,
+          pais: _country,
+          genero: _gender,
+        );
+      } catch (e) {
+        debugPrint('No se pudieron guardar los datos del registro: $e');
+      }
     }
     if (!mounted) return;
 
