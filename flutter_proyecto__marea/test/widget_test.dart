@@ -1,17 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 
 import 'package:flutter_proyecto_marea/core/app_theme.dart';
 import 'package:flutter_proyecto_marea/flows/auth/screens/login_screen.dart';
 import 'package:flutter_proyecto_marea/flows/diario/screens/diary_shell_screen.dart';
+import 'package:flutter_proyecto_marea/providers/theme_provider.dart';
+import 'package:flutter_proyecto_marea/providers/user_provider.dart';
 
 // Firebase no se inicializa en los tests, así que se prueban las pantallas
 // directamente: el login (sin enviar nada) y el diario sin usuario.
-Widget _app(Widget home) => MaterialApp(
-  theme: AppTheme.light,
-  darkTheme: AppTheme.dark,
-  themeMode: ThemeMode.dark,
-  home: home,
+// Sin Firebase, UserProvider no carga ningún usuario.
+Widget _app(Widget home) => MultiProvider(
+  providers: [
+    ChangeNotifierProvider(create: (_) => ThemeProvider()),
+    ChangeNotifierProvider(create: (_) => UserProvider()),
+  ],
+  child: MaterialApp(
+    theme: AppTheme.light,
+    darkTheme: AppTheme.dark,
+    themeMode: ThemeMode.dark,
+    home: home,
+  ),
 );
 
 void _phoneSize(WidgetTester tester) {
@@ -72,7 +82,9 @@ void main() {
     expect(find.text('Mi perfil'), findsOneWidget);
     expect(find.text('Eliminar cuenta'), findsOneWidget);
     await tester.tap(find.text('Información personal'));
-    await tester.pumpAndSettle();
+    // Sin usuario se queda cargando, así que no se usa pumpAndSettle.
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
     expect(find.text('Guardar cambios'), findsOneWidget);
   });
 }

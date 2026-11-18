@@ -80,15 +80,34 @@ class UserProvider extends ChangeNotifier {
     String? apellido,
     String? pais,
     String? genero,
+    String? ocupacion,
+    String? direccion,
   }) async {
-    final uid = _user?.uid;
-    if (uid == null) return;
-    await UserService.updateProfile(uid, {
+    final current = _user;
+    if (current == null) {
+      throw StateError('No hay un usuario con sesión iniciada.');
+    }
+    await UserService.updateProfile(current.uid, {
       if (nombre != null) 'nombre': nombre.trim(),
       if (apellido != null) 'apellido': apellido.trim(),
       'pais': ?pais,
       'genero': ?genero,
+      'ocupacion': ?ocupacion?.trim(),
+      'direccion': ?direccion?.trim(),
     });
+
+    // También actualiza el nombre de la cuenta de Firebase Auth, que es el
+    // que usan las pantallas que todavía leen AuthService.displayName.
+    if (nombre != null || apellido != null) {
+      final fullName =
+          '${(nombre ?? current.nombre).trim()} ${(apellido ?? current.apellido).trim()}'
+              .trim();
+      try {
+        await FirebaseAuth.instance.currentUser?.updateDisplayName(fullName);
+      } catch (e) {
+        debugPrint('No se pudo actualizar el nombre de la cuenta: $e');
+      }
+    }
   }
 
   @override

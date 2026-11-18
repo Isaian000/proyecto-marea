@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/profile_options.dart';
 import '../../../services/auth_service.dart';
 import '../../../services/user_service.dart';
 import '../../../widgets/auth_footer_link.dart';
@@ -125,7 +126,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: MareaDropdownField(
                   label: 'País',
                   value: _country,
-                  items: const ['México', 'Colombia', 'Argentina', 'España'],
+                  items: kCountries,
                   onChanged: (v) => setState(() => _country = v),
                 ),
               ),
@@ -134,12 +135,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: MareaDropdownField(
                   label: 'Género',
                   value: _gender,
-                  items: const [
-                    'Mujer',
-                    'Hombre',
-                    'No binario',
-                    'Prefiero no decir',
-                  ],
+                  items: kGenders,
                   onChanged: (v) => setState(() => _gender = v),
                 ),
               ),
