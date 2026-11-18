@@ -6,6 +6,7 @@ import 'package:flutter_proyecto_marea/core/app_theme.dart';
 import 'package:flutter_proyecto_marea/flows/auth/screens/login_screen.dart';
 import 'package:flutter_proyecto_marea/flows/diario/screens/diary_shell_screen.dart';
 import 'package:flutter_proyecto_marea/providers/notifications_provider.dart';
+import 'package:flutter_proyecto_marea/providers/records_provider.dart';
 import 'package:flutter_proyecto_marea/providers/theme_provider.dart';
 import 'package:flutter_proyecto_marea/providers/user_provider.dart';
 
@@ -17,6 +18,7 @@ Widget _app(Widget home) => MultiProvider(
     ChangeNotifierProvider(create: (_) => ThemeProvider()),
     ChangeNotifierProvider(create: (_) => UserProvider()),
     ChangeNotifierProvider(create: (_) => NotificationsProvider()),
+    ChangeNotifierProvider(create: (_) => RecordsProvider()),
   ],
   child: MaterialApp(
     theme: AppTheme.light,
@@ -67,7 +69,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Historial'), findsAtLeastNWidgets(1));
-    expect(find.textContaining('Reunión larga'), findsOneWidget);
+    // Sin sesión no hay registros: muestra el mensaje para empezar.
+    expect(find.textContaining('Aún no tienes registros'), findsOneWidget);
 
     await tester.tap(find.byIcon(Icons.home_outlined));
     await tester.pumpAndSettle();

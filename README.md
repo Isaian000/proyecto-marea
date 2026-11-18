@@ -43,7 +43,7 @@ users/{uid}
   fcmToken: string          // token del dispositivo
   createdAt, updatedAt, tokenUpdatedAt: timestamp
 
-users/{uid}/records/{recordId}        // diario (CRUD)
+users/{uid}/records/{yyyy-MM-dd}      // diario (CRUD), un registro por día; el id es la fecha
   date: timestamp
   mood: number (0 a 1)
   moodLabel: string
