@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/app_colors.dart';
-import '../../../models/emotional_record.dart';
+import '../../../providers/notifications_provider.dart';
+import '../../../providers/records_provider.dart';
 import '../../community/screens/community_forums_screen.dart';
 import '../../settings/screens/settings_screen.dart';
 import 'history_screen.dart';
@@ -17,71 +19,26 @@ class DiaryShellScreen extends StatefulWidget {
 
 class _DiaryShellScreenState extends State<DiaryShellScreen> {
   int selectedIndex = 0;
-  bool recordSaved = false;
-  double mood = 0.72;
-  String note =
-      'Reunión larga en la mañana, pero salí a caminar 20 min y bajé el estrés.';
 
-  final records = <EmotionalRecord>[
-    EmotionalRecord(
-      date: DateTime(2025, 9, 5),
-      mood: .72,
-      moodLabel: 'Bien',
-      note: 'Reunión larga en la mañana, pero salí a caminar 20 min y bajé el estrés.',
-      color: gold,
-    ),
-    EmotionalRecord(
-      date: DateTime(2025, 9, 4),
-      mood: .73,
-      moodLabel: 'Bien',
-      note: 'Terminé una tarea pendiente, se sintió bien avanzar.',
-      color: gold,
-    ),
-    EmotionalRecord(
-      date: DateTime(2025, 9, 3),
-      mood: .50,
-      moodLabel: 'Neutral',
-      note: 'Día normal, sin sobresaltos.',
-      color: Color(0xFFBEAF8B),
-    ),
-    EmotionalRecord(
-      date: DateTime(2025, 9, 2),
-      mood: .30,
-      moodLabel: 'Bajo',
-      note: 'Dormí poco, día lento en general.',
-      color: Color(0xFF829DB6),
-    ),
-    EmotionalRecord(
-      date: DateTime(2025, 9, 1),
-      mood: .18,
-      moodLabel: 'Ansioso',
-      note: 'Junta de proyecto se movió otra vez, cuesta empezar la semana.',
-      color: blue,
-    ),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    // Carga los registros y los avisos del usuario al entrar.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      context.read<RecordsProvider>().load();
+      context.read<NotificationsProvider>().load();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final pages = <Widget>[
-      TodayScreen(
-        saved: recordSaved,
-        initialMood: mood,
-        initialNote: note,
-        onSave: (newMood, newNote) {
-          setState(() {
-            mood = newMood;
-            note = newNote;
-            recordSaved = true;
-          });
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(const SnackBar(content: Text('Registro guardado')));
-        },
-      ),
-      HistoryScreen(records: records),
-      const PatternsScreen(),
-      const CommunityForumsScreen(),
-      const SettingsScreen(),
+    const pages = <Widget>[
+      TodayScreen(),
+      HistoryScreen(),
+      PatternsScreen(),
+      CommunityForumsScreen(),
+      SettingsScreen(),
     ];
 
     return Scaffold(
