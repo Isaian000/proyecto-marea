@@ -56,7 +56,7 @@ users/{uid}/records/{recordId}        // diario (CRUD)
 users/{uid}/notifications/{id}
   title: string
   body: string
-  icon: string
+  type: string   // diario | foros | comentarios | logro | sistema (define el ícono)
   read: bool
   createdAt: timestamp
 
@@ -75,7 +75,13 @@ groups/{groupId}/resources/{resourceId}
   title, text, type, createdAt
 ```
 
-La foto de perfil se guarda solo en el teléfono (no en Firestore).
+La foto de perfil se guarda solo en el teléfono (no en Firestore): se copia a la carpeta de la app y su ruta se guarda con `shared_preferences` en la clave `profilePhoto_{uid}`.
+
+Para crear una notificación desde cualquier parte de la app:
+
+```dart
+NotificationService.create(uid, title: 'Foros', body: 'Alguien comentó tu tema.', type: 'foros');
+```
 
 ## Reglas de Firestore sugeridas
 

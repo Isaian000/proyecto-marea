@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'core/app_theme.dart';
 import 'flows/auth/screens/splash_screen.dart';
+import 'providers/notifications_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/user_provider.dart';
 
@@ -17,6 +18,7 @@ class MareaApp extends StatelessWidget {
         // lazy: false para que empiece a escuchar la sesión desde que abre la
         // app, aunque ninguna pantalla lo use todavía.
         ChangeNotifierProvider(create: (_) => UserProvider(), lazy: false),
+        ChangeNotifierProvider(create: (_) => NotificationsProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, theme, _) => MaterialApp(
