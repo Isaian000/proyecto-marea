@@ -6,6 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 
 import '../models/app_user.dart';
+import 'notification_service.dart';
 
 // Todo lo que se lee o se guarda del usuario en Firestore (users/{uid}).
 class UserService {
@@ -54,6 +55,11 @@ class UserService {
         'genero': null,
         'createdAt': FieldValue.serverTimestamp(),
       });
+      // Primera notificación del usuario.
+      tx.set(
+        NotificationService.welcomeRef(user.uid),
+        NotificationService.welcomeData(),
+      );
     });
   }
 

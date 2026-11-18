@@ -24,15 +24,24 @@ class NotificationCard extends StatelessWidget {
     required this.title,
     required this.message,
     this.unread = false,
+    this.onTap,
   });
 
   final IconData icon;
   final String title;
   final String message;
   final bool unread;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: _card(),
+    );
+  }
+
+  Widget _card() {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(

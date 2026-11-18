@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/profile_options.dart';
 import '../../../services/auth_service.dart';
+import '../../../services/notification_service.dart';
 import '../../../services/user_service.dart';
 import '../../../widgets/auth_footer_link.dart';
 import '../../../widgets/auth_header.dart';
@@ -79,6 +80,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           pais: _country,
           genero: _gender,
         );
+        await NotificationService.createWelcome(uid);
       } catch (e) {
         debugPrint('No se pudieron guardar los datos del registro: $e');
       }

@@ -88,6 +88,29 @@ class AuthService {
     return _auth.currentUser?.emailVerified ?? false;
   }
 
+  // Cambia el correo y/o la contraseña. Firebase pide volver a confirmar la
+  // contraseña actual antes de estos cambios. El correo nuevo solo se aplica
+  // cuando el usuario abre el enlace que le llega.
+  static Future<void> updateAccount({
+    required String currentPassword,
+    String? newEmail,
+    String? newPassword,
+  }) async {
+    final user = _auth.currentUser;
+    final email = user?.email;
+    if (user == null || email == null) {
+      throw FirebaseAuthException(
+        code: 'no-current-user',
+        message: 'No hay una sesión iniciada.',
+      );
+    }
+    await user.reauthenticateWithCredential(
+      EmailAuthProvider.credential(email: email, password: currentPassword),
+    );
+    if (newPassword != null) await user.updatePassword(newPassword);
+    if (newEmail != null) await user.verifyBeforeUpdateEmail(newEmail.trim());
+  }
+
   static Future<void> signOut() async {
     await _google.signOut();
     await _auth.signOut();

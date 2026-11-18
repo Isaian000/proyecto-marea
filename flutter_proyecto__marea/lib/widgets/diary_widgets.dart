@@ -5,7 +5,7 @@ import '../core/app_theme.dart';
 import '../flows/notifications/screens/notifications_screen.dart';
 import '../flows/profile/screens/profile_screen.dart';
 import '../models/emotional_record.dart';
-import '../services/auth_service.dart';
+import 'user_avatar.dart';
 
 class TopHeader extends StatelessWidget {
   const TopHeader({
@@ -50,19 +50,7 @@ class TopHeader extends StatelessWidget {
               context,
               MaterialPageRoute(builder: (_) => const ProfileScreen()),
             ),
-            icon: CircleAvatar(
-              radius: 22,
-              backgroundColor: gold,
-              child: AuthService.initials.isEmpty
-                  ? const Icon(Icons.person, color: ink)
-                  : Text(
-                      AuthService.initials,
-                      style: const TextStyle(
-                        color: ink,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-            ),
+            icon: const UserAvatar(radius: 22, fontSize: 14),
           ),
         ],
       ],

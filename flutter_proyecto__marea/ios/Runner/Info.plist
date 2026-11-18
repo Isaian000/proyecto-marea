@@ -79,5 +79,7 @@
 	</array>
 	<key>FirebaseMessagingInstallationIdEnabled</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Marea usa tu galería para elegir tu foto de perfil.</string>
 </dict>
 </plist>

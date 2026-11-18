@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 
 import '../models/app_user.dart';
 import '../services/auth_service.dart';
+import '../services/photo_service.dart';
 import '../services/user_service.dart';
 
 // Mantiene los datos del usuario con sesión iniciada.
@@ -22,6 +23,8 @@ class UserProvider extends ChangeNotifier {
   StreamSubscription<String>? _tokenSub;
 
   AppUser? _user;
+  String? _uid;
+  String? _photoPath;
   bool _loading = false;
   String? _error;
 
@@ -29,12 +32,19 @@ class UserProvider extends ChangeNotifier {
   bool get loading => _loading;
   String? get error => _error;
 
+  // Ruta de la foto de perfil guardada en el teléfono, o null si no hay.
+  String? get photoPath => _photoPath;
+
+  String get initials => _user?.initials ?? '';
+
   Future<void> _onAuthChanged(User? firebaseUser) async {
     await _userSub?.cancel();
     await _tokenSub?.cancel();
     _userSub = null;
     _tokenSub = null;
     _error = null;
+    _uid = firebaseUser?.uid;
+    _photoPath = null;
 
     if (firebaseUser == null) {
       _user = null;
@@ -46,11 +56,14 @@ class UserProvider extends ChangeNotifier {
     _loading = true;
     notifyListeners();
 
+    unawaited(_loadPhoto(firebaseUser.uid));
+
     _userSub = UserService.watchUser(firebaseUser.uid).listen(
       (user) {
         _user = user;
         _loading = false;
         notifyListeners();
+        unawaited(_syncEmail(firebaseUser, user));
       },
       onError: (Object e) {
         debugPrint('Error al leer el usuario: $e');
@@ -72,6 +85,49 @@ class UserProvider extends ChangeNotifier {
       ).timeout(const Duration(seconds: 15));
     } catch (e) {
       debugPrint('No se pudo crear el usuario en Firestore: $e');
+    }
+  }
+
+  Future<void> _loadPhoto(String uid) async {
+    try {
+      final path = await PhotoService.load(uid);
+      if (_uid != uid) return;
+      _photoPath = path;
+      notifyListeners();
+    } catch (e) {
+      debugPrint('No se pudo cargar la foto de perfil: $e');
+    }
+  }
+
+  // Abre la galería. Devuelve false si el usuario canceló.
+  Future<bool> pickPhoto() async {
+    final uid = _uid;
+    if (uid == null) throw StateError('No hay un usuario con sesión iniciada.');
+    final path = await PhotoService.pickFromGallery(uid);
+    if (path == null) return false;
+    _photoPath = path;
+    notifyListeners();
+    return true;
+  }
+
+  Future<void> removePhoto() async {
+    final uid = _uid;
+    if (uid == null) return;
+    await PhotoService.remove(uid);
+    _photoPath = null;
+    notifyListeners();
+  }
+
+  // Cuando el usuario confirma un correo nuevo, Firebase Auth lo cambia;
+  // aquí se copia también al documento de Firestore.
+  Future<void> _syncEmail(User firebaseUser, AppUser? user) async {
+    final authEmail = firebaseUser.email;
+    if (user == null || authEmail == null || authEmail.isEmpty) return;
+    if (user.email == authEmail) return;
+    try {
+      await UserService.updateProfile(firebaseUser.uid, {'email': authEmail});
+    } catch (e) {
+      debugPrint('No se pudo actualizar el correo en Firestore: $e');
     }
   }
 

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_proyecto_marea/core/app_theme.dart';
 import 'package:flutter_proyecto_marea/flows/auth/screens/login_screen.dart';
 import 'package:flutter_proyecto_marea/flows/diario/screens/diary_shell_screen.dart';
+import 'package:flutter_proyecto_marea/providers/notifications_provider.dart';
 import 'package:flutter_proyecto_marea/providers/theme_provider.dart';
 import 'package:flutter_proyecto_marea/providers/user_provider.dart';
 
@@ -15,6 +16,7 @@ Widget _app(Widget home) => MultiProvider(
   providers: [
     ChangeNotifierProvider(create: (_) => ThemeProvider()),
     ChangeNotifierProvider(create: (_) => UserProvider()),
+    ChangeNotifierProvider(create: (_) => NotificationsProvider()),
   ],
   child: MaterialApp(
     theme: AppTheme.light,
