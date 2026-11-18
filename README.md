@@ -38,6 +38,8 @@ users/{uid}
   email: string
   pais: string | null
   genero: string | null
+  ocupacion: string | null   // opcional
+  direccion: string | null   // opcional
   fcmToken: string          // token del dispositivo
   createdAt, updatedAt, tokenUpdatedAt: timestamp
 

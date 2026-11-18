@@ -7,6 +7,8 @@ class AppUser {
     required this.email,
     this.pais,
     this.genero,
+    this.ocupacion,
+    this.direccion,
     this.fcmToken,
   });
 
@@ -16,6 +18,8 @@ class AppUser {
   final String email;
   final String? pais;
   final String? genero;
+  final String? ocupacion;
+  final String? direccion;
   final String? fcmToken;
 
   String get fullName => '$nombre $apellido'.trim();
@@ -35,6 +39,8 @@ class AppUser {
       email: data['email'] as String? ?? '',
       pais: data['pais'] as String?,
       genero: data['genero'] as String?,
+      ocupacion: data['ocupacion'] as String?,
+      direccion: data['direccion'] as String?,
       fcmToken: data['fcmToken'] as String?,
     );
   }
@@ -45,5 +51,7 @@ class AppUser {
     'email': email,
     'pais': pais,
     'genero': genero,
+    'ocupacion': ocupacion,
+    'direccion': direccion,
   };
 }
