@@ -5,7 +5,8 @@ import '../../../core/app_theme.dart';
 import '../../../widgets/diary_widgets.dart';
 
 class ForumJoinedScreen extends StatelessWidget {
-  const ForumJoinedScreen({super.key});
+  const ForumJoinedScreen({super.key, required this.forumName});
+  final String forumName;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,7 @@ class ForumJoinedScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Tu registro en el foro se realizó con éxito.',
+                      'Te uniste a $forumName.\nYa lo encuentras en Mis grupos.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: mutedColor(context),
