@@ -60,20 +60,29 @@ users/{uid}/notifications/{id}
   read: bool
   createdAt: timestamp
 
-forums/{forumId}
-  name, description, ...
+forums/{forumId}          // ids fijos: ansiedad-1, depresion-2, social-3...
+  name, subtitle, category   // category: ansiedad | depresion | social
+  introTitle, question, description   // textos de "Hablemos de..."
+  isPublic: bool
+  groupId: string            // grupo al que te une el foro
+  order: number
+  memberIds: [uid]           // quienes se unieron
+  requestIds: [uid]          // solicitudes a foros privados
 forums/{forumId}/topics/{topicId}
   title, text, authorId, authorName, votes, createdAt
 forums/{forumId}/topics/{topicId}/comments/{commentId}
   text, authorId, authorName, createdAt
 
-groups/{groupId}
-  name, description, ...
+groups/{groupId}          // ids fijos: ansiedad, ansiedad-social, depresion
+  name, topic, category, description, isPublic
+  memberIds: [uid]           // "Mis grupos" = groups donde memberIds contiene tu uid
 groups/{groupId}/messages/{messageId}
   text, authorId, authorName, createdAt
 groups/{groupId}/resources/{resourceId}
   title, text, type, createdAt
 ```
+
+Si la colección `forums` está vacía, al abrir Comunidad se crean los foros y grupos iniciales (`seedForums` y `seedGroups` en `lib/services/community_service.dart`).
 
 La foto de perfil se guarda solo en el teléfono (no en Firestore): se copia a la carpeta de la app y su ruta se guarda con `shared_preferences` en la clave `profilePhoto_{uid}`.
 
