@@ -76,11 +76,25 @@ forums/{forumId}/topics/{topicId}/comments/{commentId}
 groups/{groupId}          // ids fijos: ansiedad, ansiedad-social, depresion
   name, topic, category, description, isPublic
   memberIds: [uid]           // "Mis grupos" = groups donde memberIds contiene tu uid
-groups/{groupId}/messages/{messageId}
+groups/{groupId}/members/{uid}                     // se crea al abrir el grupo
+  name, lastSeen
+groups/{groupId}/topics/{topicId}                  // zona de conversación
+  title, text, authorId, authorName, createdAt
+  commentCount: number, voterIds: [uid]
+groups/{groupId}/topics/{topicId}/comments/{commentId}
   text, authorId, authorName, createdAt
-groups/{groupId}/resources/{resourceId}
-  title, text, type, createdAt
+groups/{groupId}/messages/{messageId}              // chat general del grupo
+  text, authorId, authorName, createdAt
+groups/{groupId}/directChats/{uidA_uidB}/messages/{messageId}   // chat entre dos (uids ordenados)
+  text, authorId, authorName, createdAt
+groups/{groupId}/resources/{resourceId}            // recursos útiles
+  title, description, order
+  body: string   // líneas "## Título", "- viñeta" o párrafo
+groups/{groupId}/reviews/{uid}                     // reseñas del grupo
+  rating: 1-5, updatedAt
 ```
+
+Si un grupo no tiene temas o recursos, al abrirlo se crean los iniciales (`starterTopics` y `seedResources` en `lib/services/group_service.dart`).
 
 Si la colección `forums` está vacía, al abrir Comunidad se crean los foros y grupos iniciales (`seedForums` y `seedGroups` en `lib/services/community_service.dart`).
 

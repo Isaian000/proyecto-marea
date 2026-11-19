@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/app_theme.dart';
 import '../../../models/group_models.dart';
+import '../../../providers/group_provider.dart';
 import '../../../widgets/diary_widgets.dart';
 import '../../../widgets/group_widgets.dart';
+import '../group_navigation.dart';
 
+// Chat en tiempo real: el general del grupo (withUid == null) o con una
+// persona del grupo.
 class ChatScreen extends StatefulWidget {
   const ChatScreen({
     super.key,
@@ -14,7 +19,7 @@ class ChatScreen extends StatefulWidget {
     this.subtitle = '',
     this.initials = '',
     this.isGroup = false,
-    this.messages = const [],
+    this.withUid,
   });
   final String title;
   final Color color;
@@ -22,7 +27,7 @@ class ChatScreen extends StatefulWidget {
   final String subtitle;
   final String initials;
   final bool isGroup;
-  final List<ChatMessage> messages;
+  final String? withUid;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -30,12 +35,12 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
-  final List<ChatMessage> _messages = [];
+  late final Stream<List<ChatMessage>> _messages;
 
   @override
   void initState() {
     super.initState();
-    _messages.addAll(widget.messages);
+    _messages = context.read<GroupProvider>().messages(withUid: widget.withUid);
   }
 
   @override
@@ -44,45 +49,29 @@ class _ChatScreenState extends State<ChatScreen> {
     super.dispose();
   }
 
-  void _send() {
-    String text = _controller.text.trim();
-    if (text.isEmpty) {
-      return;
-    }
-    setState(() {
-      _messages.add(ChatMessage(text: text, isMine: true, author: 'Tú'));
-    });
+  Future<void> _send() async {
+    final text = _controller.text.trim();
+    if (text.isEmpty) return;
     _controller.clear();
-  }
-
-  List<Widget> _buildMessages() {
-    List<Widget> items = [];
-    for (int i = 0; i < _messages.length; i++) {
-      items.add(
-        MessageBubble(message: _messages[i], showAuthor: widget.isGroup),
+    try {
+      await context.read<GroupProvider>().sendMessage(
+        text,
+        withUid: widget.withUid,
       );
+    } catch (e) {
+      debugPrint('No se pudo enviar el mensaje: $e');
+      if (mounted) {
+        _controller.text = text;
+        showGroupMessage(context, 'No se pudo enviar. Revisa tu conexión.');
+      }
     }
-    if (items.isEmpty) {
-      items.add(
-        Center(
-          child: Text(
-            'Envía el primer mensaje',
-            style: TextStyle(color: mutedColor(context)),
-          ),
-        ),
-      );
-    }
-    return items;
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget avatar;
-    if (widget.isGroup) {
-      avatar = IconAvatar(icon: Icons.people_outline, color: widget.color);
-    } else {
-      avatar = InitialsAvatar(initials: widget.initials, color: widget.color);
-    }
+    final avatar = widget.isGroup
+        ? IconAvatar(icon: Icons.people_outline, color: widget.color)
+        : InitialsAvatar(initials: widget.initials, color: widget.color);
 
     return Scaffold(
       body: SafeArea(
@@ -122,18 +111,47 @@ class _ChatScreenState extends State<ChatScreen> {
                       ],
                     ),
                   ),
-                  if (!widget.isGroup)
-                    const RoundIconButton(icon: Icons.phone_outlined),
-                  const SizedBox(width: 6),
-                  const RoundIconButton(icon: Icons.more_vert),
                 ],
               ),
             ),
             Container(height: 1, color: surfaceColor(context)),
             Expanded(
-              child: ListView(
-                padding: const EdgeInsets.all(20),
-                children: _buildMessages(),
+              child: StreamBuilder<List<ChatMessage>>(
+                stream: _messages,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        'No se pudieron cargar los mensajes.',
+                        style: TextStyle(color: mutedColor(context)),
+                      ),
+                    );
+                  }
+                  if (!snapshot.hasData) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  final messages = snapshot.data!;
+                  if (messages.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'Envía el primer mensaje',
+                        style: TextStyle(color: mutedColor(context)),
+                      ),
+                    );
+                  }
+                  // reverse: los mensajes nuevos quedan abajo y a la vista.
+                  return ListView(
+                    reverse: true,
+                    padding: const EdgeInsets.all(20),
+                    children: [
+                      for (final message in messages.reversed)
+                        MessageBubble(
+                          message: message,
+                          showAuthor: widget.isGroup && !message.isMine,
+                        ),
+                    ],
+                  );
+                },
               ),
             ),
             Padding(
