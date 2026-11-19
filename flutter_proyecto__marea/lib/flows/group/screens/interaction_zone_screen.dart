@@ -1,129 +1,85 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../../../core/app_colors.dart';
 import '../../../core/app_theme.dart';
-import '../../../models/group_models.dart';
+import '../../../providers/group_provider.dart';
 import '../../../widgets/group_widgets.dart';
+import '../group_navigation.dart';
 import 'chat_screen.dart';
 
+// Integrantes del grupo (desde Firestore) y el chat general.
 class InteractionZoneScreen extends StatelessWidget {
   const InteractionZoneScreen({super.key});
 
-  void _openChat(BuildContext context, ChatScreen chat) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => chat));
-  }
-
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<GroupProvider>();
+    final members = provider.otherMembers;
+
     return Scaffold(
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(24, 18, 24, 24),
-          children: [
-            const PageHeader(
-              title: 'Zona de interacción',
-              subtitle: 'Conecta con otras personas del grupo',
-            ),
-            const SizedBox(height: 18),
-            Text(
-              'Perfiles sugeridos',
-              style: TextStyle(color: mutedColor(context), fontSize: 14),
-            ),
-            const SizedBox(height: 12),
-            SuggestedProfileCard(
-              name: 'Javier Salas',
-              status: 'Disponible para platicar',
-              initials: 'JS',
-              color: slate,
-              online: true,
-              onChat: () => _openChat(
-                context,
-                const ChatScreen(
-                  title: 'Javier Salas',
-                  subtitle: 'ID: GS572H',
-                  initials: 'JS',
-                  color: slate,
-                  hint: 'Escribe un mensaje',
-                  messages: [
-                    ChatMessage(
-                      text: 'Hola, me interesó tu perfil, mucho gusto',
-                      isMine: false,
-                    ),
-                    ChatMessage(text: 'Hola, mucho gusto', isMine: true),
-                    ChatMessage(
-                      text: '¿Quieres platicar sobre algún tema?',
-                      isMine: false,
-                    ),
-                    ChatMessage(text: 'Sí, claro', isMine: true),
-                  ],
+        child: RefreshIndicator(
+          onRefresh: provider.load,
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(24, 18, 24, 24),
+            children: [
+              const PageHeader(
+                title: 'Zona de interacción',
+                subtitle: 'Conecta con otras personas del grupo',
+              ),
+              const SizedBox(height: 18),
+              GlobalChatCard(
+                onPressed: () => pushInGroup(
+                  context,
+                  ChatScreen(
+                    title: provider.group.name,
+                    color: provider.group.color,
+                    hint: 'Escribe algo',
+                    isGroup: true,
+                  ),
                 ),
               ),
-            ),
-            SuggestedProfileCard(
-              name: 'Valeria Roma',
-              status: 'Necesito platicar',
-              initials: 'VR',
-              color: gold,
-              online: true,
-              onChat: () => _openChat(
-                context,
-                const ChatScreen(
-                  title: 'Valeria Roma',
-                  subtitle: 'ID: VR218K',
-                  initials: 'VR',
-                  color: gold,
-                  hint: 'Escribe un mensaje',
-                ),
+              const SizedBox(height: 18),
+              Text(
+                'Integrantes del grupo',
+                style: TextStyle(color: mutedColor(context), fontSize: 14),
               ),
-            ),
-            SuggestedProfileCard(
-              name: 'Diego Leal',
-              status: 'Descansando',
-              initials: 'DL',
-              color: sand,
-              online: false,
-              onChat: () => _openChat(
-                context,
-                const ChatScreen(
-                  title: 'Diego Leal',
-                  subtitle: 'ID: DL904P',
-                  initials: 'DL',
-                  color: sand,
-                  hint: 'Escribe un mensaje',
-                ),
-              ),
-            ),
-            const SizedBox(height: 4),
-            GlobalChatCard(
-              onPressed: () => _openChat(
-                context,
-                const ChatScreen(
-                  title: 'Grupo General',
-                  color: gold,
-                  isGroup: true,
-                  hint: 'Escribe algo',
-                  messages: [
-                    ChatMessage(
-                      text: 'Hola, buenas tardes. Un gusto estar por aquí',
-                      isMine: false,
-                      author: 'José',
+              const SizedBox(height: 12),
+              if (provider.loading && members.isEmpty)
+                const Padding(
+                  padding: EdgeInsets.only(top: 24),
+                  child: Center(child: CircularProgressIndicator()),
+                )
+              else if (members.isEmpty)
+                Text(
+                  provider.error ??
+                      'Aún no hay otros integrantes. Cuando alguien más entre '
+                          'al grupo aparecerá aquí.',
+                  style: TextStyle(color: mutedColor(context), height: 1.4),
+                )
+              else
+                for (final member in members)
+                  SuggestedProfileCard(
+                    name: member.name,
+                    status: member.status,
+                    initials: member.initials,
+                    color: member.color,
+                    online: member.online,
+                    onChat: () => pushInGroup(
+                      context,
+                      ChatScreen(
+                        title: member.name,
+                        subtitle: 'Integrante del grupo',
+                        initials: member.initials,
+                        color: member.color,
+                        hint: 'Escribe un mensaje',
+                        withUid: member.uid,
+                      ),
                     ),
-                    ChatMessage(
-                      text: '¿Es la primera vez que entras?',
-                      isMine: false,
-                      author: 'Álvaro',
-                    ),
-                    ChatMessage(
-                      text: 'Yo soy nueva por aquí',
-                      isMine: false,
-                      author: 'María',
-                    ),
-                    ChatMessage(text: 'Yo también', isMine: true, author: 'Tú'),
-                  ],
-                ),
-              ),
-            ),
-          ],
+                  ),
+            ],
+          ),
         ),
       ),
     );

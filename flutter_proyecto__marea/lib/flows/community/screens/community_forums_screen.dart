@@ -61,12 +61,7 @@ class _CommunityForumsScreenState extends State<CommunityForumsScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => GroupScreen(
-          name: group.name,
-          topic: group.topic,
-          members: group.membersLabel,
-          color: group.color,
-        ),
+        builder: (_) => GroupScreen(group: group),
       ),
     );
   }
