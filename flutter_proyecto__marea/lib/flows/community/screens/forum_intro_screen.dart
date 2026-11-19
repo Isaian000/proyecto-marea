@@ -1,28 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/app_colors.dart';
+import '../../../models/forum.dart';
+import '../../../providers/community_provider.dart';
 import '../../../widgets/community_widgets.dart';
 import '../../../widgets/diary_widgets.dart';
 import 'forum_joined_screen.dart';
 
-class ForumIntroScreen extends StatelessWidget {
-  const ForumIntroScreen({
-    super.key,
-    required this.title,
-    required this.question,
-    required this.description,
-    required this.color,
-  });
-  final String title;
-  final String question;
-  final String description;
-  final Color color;
+class ForumIntroScreen extends StatefulWidget {
+  const ForumIntroScreen({super.key, required this.forum});
+  final Forum forum;
 
-  void _register(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const ForumJoinedScreen()),
-    );
+  @override
+  State<ForumIntroScreen> createState() => _ForumIntroScreenState();
+}
+
+class _ForumIntroScreenState extends State<ForumIntroScreen> {
+  bool _saving = false;
+
+  Future<void> _register() async {
+    setState(() => _saving = true);
+    try {
+      await context.read<CommunityProvider>().join(widget.forum);
+      if (!mounted) return;
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ForumJoinedScreen(forumName: widget.forum.name),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(content: Text('No se pudo completar el registro.')),
+        );
+    }
+    if (mounted) setState(() => _saving = false);
   }
 
   @override
@@ -44,9 +60,13 @@ class ForumIntroScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 18),
-                    SerifText(title, size: 28, weight: FontWeight.bold),
+                    SerifText(
+                      widget.forum.introTitle,
+                      size: 28,
+                      weight: FontWeight.bold,
+                    ),
                     const SizedBox(height: 18),
-                    ForumIntroArt(color: color),
+                    ForumIntroArt(color: widget.forum.color),
                     const SizedBox(height: 18),
                     Container(
                       padding: const EdgeInsets.all(18),
@@ -58,7 +78,7 @@ class ForumIntroScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            question,
+                            widget.forum.question,
                             style: const TextStyle(
                               color: ink,
                               fontWeight: FontWeight.bold,
@@ -68,7 +88,7 @@ class ForumIntroScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 10),
                           Text(
-                            description,
+                            widget.forum.description,
                             style: const TextStyle(
                               color: ink,
                               fontSize: 14,
@@ -85,8 +105,8 @@ class ForumIntroScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: PrimaryButton(
-                  label: 'Registrarme',
-                  onPressed: () => _register(context),
+                  label: _saving ? 'Registrando...' : 'Registrarme',
+                  onPressed: _saving ? () {} : _register,
                 ),
               ),
             ],

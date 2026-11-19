@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../../../core/app_colors.dart';
+import '../../../core/app_theme.dart';
+import '../../../models/forum.dart';
+import '../../../models/group_summary.dart';
+import '../../../providers/community_provider.dart';
 import '../../../widgets/community_widgets.dart';
 import '../../../widgets/diary_widgets.dart';
 import '../../group/screens/group_screen.dart';
@@ -16,183 +20,190 @@ class CommunityForumsScreen extends StatefulWidget {
 
 class _CommunityForumsScreenState extends State<CommunityForumsScreen> {
   int _tab = 0; // 0 foros, 1 mis grupos
-  int _category = 0; // 0 ansiedad, 1 depresion, 2 social
+  int _category = 0; // indice en Forum.categories
 
-  // datos por categoria en el orden de _category
-  final List<String> _forumNames = [
-    'Foro de ansiedad',
-    'Foro de depresión',
-    'Foro de ansiedad social',
-  ];
-  final List<String> _forumSubtitles = [
-    'Para platicar sobre la ansiedad',
-    'Para platicar sobre la depresión',
-    'Para platicar sobre ansiedad social',
-  ];
-  final List<Color> _forumColors = [slate, blue, gold];
-
-  void _selectTab(int index) {
-    setState(() {
-      _tab = index;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) context.read<CommunityProvider>().load();
     });
   }
 
-  void _selectCategory(int index) {
-    setState(() {
-      _category = index;
-    });
+  void _openForumIntro(Forum forum) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => ForumIntroScreen(forum: forum)),
+    );
   }
 
-  // abre el foro publico
-  void _openForumIntro() {
-    Widget page;
-    if (_category == 0) {
-      page = const ForumIntroScreen(
-        title: 'Hablemos de ansiedad',
-        question: '¿Te has sentido abrumado, con pensamientos que no se detienen o con una constante sensación de inquietud?',
-        description: 'No estás solo. Te invitamos a un espacio seguro donde podrás compartir, escuchar y aprender sobre la ansiedad junto a otras personas que te comprenden. Hablar de lo que sentimos es el primer paso para sanar.',
-        color: slate,
-      );
-    } else if (_category == 1) {
-      page = const ForumIntroScreen(
-        title: 'Hablemos de depresión',
-        question: 'A veces la tristeza pesa más de lo que podemos expresar.',
-        description: 'Si te has sentido sin energía, desmotivado o desconectado de todo, queremos que sepas que no estás solo. Este foro es un espacio empático y seguro para hablar sobre la depresión y encontrar apoyo real.',
-        color: blue,
-      );
-    } else {
-      page = const ForumIntroScreen(
-        title: 'Hablemos de estrés social',
-        question: '¿Te cuesta hablar en público, iniciar conversaciones o sentirte cómodo en reuniones sociales?',
-        description: 'La ansiedad social puede ser muy difícil, pero no tienes que afrontarla solo. Te invitamos a un espacio de comprensión y apoyo donde podrás compartir tus experiencias con personas que te entienden.',
-        color: gold,
-      );
+  Future<void> _sendRequest(Forum forum) async {
+    final messenger = ScaffoldMessenger.of(context);
+    String message;
+    try {
+      await context.read<CommunityProvider>().requestAccess(forum);
+      message = 'Solicitud enviada';
+    } catch (e) {
+      message = 'No se pudo enviar la solicitud.';
     }
-    Navigator.push(context, MaterialPageRoute(builder: (context) => page));
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
   }
 
-  // solicitud para foro privado
-  void _sendRequest() {
+  void _showMessage(String message) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(const SnackBar(content: Text('Solicitud enviada')));
+      ..showSnackBar(SnackBar(content: Text(message)));
   }
 
-  void _openGroup(String name, String topic, String members, Color color) {
+  void _openGroup(GroupSummary group) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => GroupScreen(
-          name: name,
-          topic: topic,
-          members: members,
-          color: color,
+        builder: (_) => GroupScreen(
+          name: group.name,
+          topic: group.topic,
+          members: group.membersLabel,
+          color: group.color,
         ),
       ),
     );
   }
 
-  // tarjetas de la categoria seleccionada
-  List<Widget> _buildForumCards() {
-    List<Widget> cards = [];
-    for (int i = 1; i <= 3; i++) {
-      // foro 1 publico, foro 2 publico solo en ansiedad, foro 3 privado
-      bool isPublic = i == 1 || (i == 2 && _category == 0);
-      cards.add(
-        ForumCard(
-          title: '${_forumNames[_category]} $i',
-          subtitle: _forumSubtitles[_category],
-          color: _forumColors[_category],
-          isPublic: isPublic,
-          onPressed: isPublic ? _openForumIntro : _sendRequest,
-        ),
-      );
+  Widget _forumCard(Forum forum, String? uid) {
+    final member = forum.isMember(uid);
+    final requested = forum.hasRequested(uid);
+    String? label;
+    bool? filled;
+    VoidCallback onPressed;
+
+    if (member) {
+      label = 'Unido';
+      filled = false;
+      onPressed = () => _showMessage('Ya eres parte de este foro.');
+    } else if (forum.isPublic) {
+      onPressed = () => _openForumIntro(forum);
+    } else if (requested) {
+      label = 'Solicitud enviada';
+      filled = false;
+      onPressed = () => _showMessage('Tu solicitud está pendiente.');
+    } else {
+      onPressed = () => _sendRequest(forum);
     }
-    return cards;
+
+    return ForumCard(
+      title: forum.name,
+      subtitle: forum.subtitle,
+      color: forum.color,
+      isPublic: forum.isPublic,
+      actionLabel: label,
+      actionFilled: filled,
+      onPressed: onPressed,
+    );
+  }
+
+  Widget _message(BuildContext context, String text) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 40),
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+        style: TextStyle(color: mutedColor(context), height: 1.5),
+      ),
+    );
+  }
+
+  List<Widget> _forumsTab(CommunityProvider provider) {
+    final forums = provider.forumsIn(Forum.categories[_category]);
+    return [
+      Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          for (final (i, label) in Forum.categoryLabels.indexed)
+            CategoryChip(
+              label: label,
+              selected: _category == i,
+              onTap: () => setState(() => _category = i),
+            ),
+        ],
+      ),
+      const SizedBox(height: 16),
+      if (provider.loading && provider.forums.isEmpty)
+        const Padding(
+          padding: EdgeInsets.only(top: 40),
+          child: Center(child: CircularProgressIndicator()),
+        )
+      else if (forums.isEmpty)
+        _message(
+          context,
+          provider.error ??
+              (provider.uid == null
+                  ? 'Inicia sesión para ver los foros.'
+                  : 'No hay foros en esta categoría.'),
+        )
+      else
+        for (final forum in forums) _forumCard(forum, provider.uid),
+    ];
+  }
+
+  List<Widget> _groupsTab(CommunityProvider provider) {
+    final groups = provider.myGroups;
+    if (provider.loading && groups.isEmpty) {
+      return const [
+        Padding(
+          padding: EdgeInsets.only(top: 40),
+          child: Center(child: CircularProgressIndicator()),
+        ),
+      ];
+    }
+    if (groups.isEmpty) {
+      return [
+        _message(
+          context,
+          provider.error ??
+              'Aún no estás en ningún grupo.\nÚnete a un foro para empezar.',
+        ),
+      ];
+    }
+    return [
+      for (final group in groups)
+        GroupCard(
+          name: group.name,
+          members: group.membersLabel,
+          color: group.color,
+          isPublic: group.isPublic,
+          onPressed: () => _openGroup(group),
+        ),
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(24, 18, 24, 24),
-      children: [
-        TopHeader(
-          title: 'Comunidad',
-          subtitle: _tab == 0 ? 'Foros de apoyo' : 'Tus grupos',
-          showProfile: true,
-        ),
-        const SizedBox(height: 20),
-        SegmentedTabs(
-          labels: const ['Foros', 'Mis grupos'],
-          selected: _tab,
-          onSelected: _selectTab,
-        ),
-        const SizedBox(height: 16),
-        if (_tab == 0) ...[
-          Row(
-            children: [
-              CategoryChip(
-                label: 'Ansiedad',
-                selected: _category == 0,
-                onTap: () => _selectCategory(0),
-              ),
-              const SizedBox(width: 8),
-              CategoryChip(
-                label: 'Depresión',
-                selected: _category == 1,
-                onTap: () => _selectCategory(1),
-              ),
-              const SizedBox(width: 8),
-              CategoryChip(
-                label: 'Social',
-                selected: _category == 2,
-                onTap: () => _selectCategory(2),
-              ),
-            ],
+    final provider = context.watch<CommunityProvider>();
+
+    return RefreshIndicator(
+      onRefresh: provider.load,
+      child: ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.fromLTRB(24, 18, 24, 24),
+        children: [
+          TopHeader(
+            title: 'Comunidad',
+            subtitle: _tab == 0 ? 'Foros de apoyo' : 'Tus grupos',
+            showProfile: true,
+          ),
+          const SizedBox(height: 20),
+          SegmentedTabs(
+            labels: const ['Foros', 'Mis grupos'],
+            selected: _tab,
+            onSelected: (index) => setState(() => _tab = index),
           ),
           const SizedBox(height: 16),
-          ..._buildForumCards(),
-        ] else ...[
-          GroupCard(
-            name: 'Grupo Ansiedad',
-            members: '345+ integrantes',
-            color: slate,
-            isPublic: true,
-            onPressed: () => _openGroup(
-              'Grupo Ansiedad',
-              'Ansiedad',
-              '345+ integrantes',
-              slate,
-            ),
-          ),
-          GroupCard(
-            name: 'Grupo Ansiedad Social',
-            members: '78 integrantes',
-            color: gold,
-            isPublic: false,
-            onPressed: () => _openGroup(
-              'Grupo Ansiedad Social',
-              'Ansiedad Social',
-              '78 integrantes',
-              gold,
-            ),
-          ),
-          GroupCard(
-            name: 'Grupo Depresión',
-            members: '145 integrantes',
-            color: blue,
-            isPublic: false,
-            onPressed: () => _openGroup(
-              'Grupo Depresión',
-              'Depresión',
-              '145 integrantes',
-              blue,
-            ),
-          ),
+          if (_tab == 0) ..._forumsTab(provider) else ..._groupsTab(provider),
         ],
-      ],
+      ),
     );
   }
 }
-
-// filtro de categoria
