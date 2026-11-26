@@ -6,6 +6,7 @@ import '../../../widgets/profile_widgets.dart';
 import '../../../widgets/settings_widgets.dart';
 import '../../notifications/screens/notifications_screen.dart';
 import '../../profile/screens/profile_screen.dart';
+import '../../mental_health_map/screens/care_centers_map_page.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -56,6 +57,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
           icon: Icons.notifications_none,
           label: 'Notificaciones',
           onTap: () => _open(const NotificationsScreen()),
+        ),
+        const SizedBox(height: 12),
+        ProfileOption(
+          icon: Icons.map,
+          label: 'Centros de apoyo cercanos',
+          onTap: () => _open(const CareCentersMapPage()),
         ),
         const SizedBox(height: 12),
         ProfileOption(

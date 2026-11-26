@@ -112,7 +112,7 @@ class _DiaryShellScreenState extends State<DiaryShellScreen> {
           NavigationDestination(
             icon: Icon(Icons.people_outline),
             selectedIcon: Icon(Icons.people),
-            label: 'Comunidad',
+            label: 'Grupos',
           ),
           NavigationDestination(
             icon: Icon(Icons.settings_outlined),

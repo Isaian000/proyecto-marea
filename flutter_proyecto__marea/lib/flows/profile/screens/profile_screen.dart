@@ -7,6 +7,7 @@ import '../../../widgets/profile_widgets.dart';
 import 'about_screen.dart';
 import 'account_screen.dart';
 import 'personal_information_screen.dart';
+import '../../mental_health_map/screens/care_centers_map_page.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -173,6 +174,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         MaterialPageRoute(
                           builder: (_) => const AccountScreen(),
                         ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    ProfileOption(
+                      icon: Icons.map,
+                      label: 'Centros de apoyo cercanos',
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const CareCentersMapPage()),
                       ),
                     ),
                     const SizedBox(height: 12),
