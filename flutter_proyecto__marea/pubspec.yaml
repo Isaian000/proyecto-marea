@@ -38,7 +38,6 @@ dependencies:
   firebase_core: ^5.1.0
   firebase_auth: ^7.0.1
   google_sign_in: ^6.3.0
-<<<<<<< HEAD
   flutter_map: ^8.3.2
   latlong2: ^0.10.1
   geolocator: ^14.1.2
@@ -46,16 +45,11 @@ dependencies:
   url_launcher: ^6.3.3
   provider: ^6.1.5+1
   cloud_firestore: ^7.2.0
-=======
-  cloud_firestore: ^7.1.0
   firebase_messaging: ^17.0.1
-  provider: ^6.1.2
   shared_preferences: ^2.3.0
   image_picker: ^1.1.2
-  http: ^1.2.0
   intl: ^0.20.2
   path_provider: ^2.1.4
->>>>>>> b309ec9bcb73845411cf7366cfb63a524ca30f7e
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
