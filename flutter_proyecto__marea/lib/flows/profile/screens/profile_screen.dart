@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/app_colors.dart';
 import '../../../core/app_theme.dart';
+import '../../../providers/user_provider.dart';
 import '../../../services/auth_service.dart';
 import '../../../widgets/profile_widgets.dart';
+import '../../../widgets/user_avatar.dart';
 import 'about_screen.dart';
 import 'account_screen.dart';
 import 'personal_information_screen.dart';
@@ -21,6 +24,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _showMessage(String text) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+  }
+
+  Future<void> _showPhotoOptions() async {
+    final userProvider = context.read<UserProvider>();
+    final action = await showModalBottomSheet<String>(
+      context: context,
+      builder: (sheetContext) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo_library_outlined),
+              title: const Text('Elegir de la galería'),
+              onTap: () => Navigator.pop(sheetContext, 'pick'),
+            ),
+            if (userProvider.photoPath != null)
+              ListTile(
+                leading: const Icon(Icons.delete_outline),
+                title: const Text('Quitar foto'),
+                onTap: () => Navigator.pop(sheetContext, 'remove'),
+              ),
+          ],
+        ),
+      ),
+    );
+    if (action == null || !mounted) return;
+
+    try {
+      if (action == 'pick') {
+        final changed = await userProvider.pickPhoto();
+        if (changed) _showMessage('Foto actualizada');
+      } else {
+        await userProvider.removePhoto();
+        _showMessage('Foto eliminada');
+      }
+    } catch (e) {
+      debugPrint('No se pudo cambiar la foto: $e');
+      if (mounted) _showMessage('No se pudo cambiar la foto.');
+    }
   }
 
   Future<void> _sendVerification() async {
@@ -106,24 +148,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     const SizedBox(height: 16),
                     const ProfileScreenTitle('Mi perfil'),
                     const SizedBox(height: 28),
-                    CircleAvatar(
-                      radius: 48,
-                      backgroundColor: AppColors.gold,
-                      backgroundImage: user?.photoURL != null
-                          ? NetworkImage(user!.photoURL!)
-                          : null,
-                      child: user?.photoURL != null
-                          ? null
-                          : Text(
-                              AuthService.initials,
-                              style: const TextStyle(
-                                color: AppColors.ink,
-                                fontFamily: 'Georgia',
-                                fontFamilyFallback: ['serif'],
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
+                    Center(
+                      child: Stack(
+                        children: [
+                          const UserAvatar(radius: 48, fontSize: 30),
+                          Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: Material(
+                              color: AppColors.teal,
+                              shape: const CircleBorder(),
+                              child: IconButton(
+                                tooltip: 'Cambiar foto',
+                                icon: const Icon(
+                                  Icons.photo_camera_outlined,
+                                  color: AppColors.ink,
+                                  size: 20,
+                                ),
+                                onPressed: _showPhotoOptions,
                               ),
                             ),
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 18),
                     Text(

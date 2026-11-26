@@ -5,7 +5,8 @@ import '../core/app_theme.dart';
 import '../flows/notifications/screens/notifications_screen.dart';
 import '../flows/profile/screens/profile_screen.dart';
 import '../models/emotional_record.dart';
-import '../services/auth_service.dart';
+import '../services/quote_service.dart';
+import 'user_avatar.dart';
 
 class TopHeader extends StatelessWidget {
   const TopHeader({
@@ -50,19 +51,7 @@ class TopHeader extends StatelessWidget {
               context,
               MaterialPageRoute(builder: (_) => const ProfileScreen()),
             ),
-            icon: CircleAvatar(
-              radius: 22,
-              backgroundColor: gold,
-              child: AuthService.initials.isEmpty
-                  ? const Icon(Icons.person, color: ink)
-                  : Text(
-                      AuthService.initials,
-                      style: const TextStyle(
-                        color: ink,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-            ),
+            icon: const UserAvatar(radius: 22, fontSize: 14),
           ),
         ],
       ],
@@ -179,76 +168,93 @@ class MoodSlider extends StatelessWidget {
   }
 }
 
+// Puntos de la semana actual (lunes a domingo) con el color del ánimo de
+// cada día. Los días sin registro se ven apagados.
 class WeekDots extends StatelessWidget {
-  const WeekDots({super.key});
-
-  List<Widget> _buildDays(BuildContext context) {
-    const labels = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
-    const colors = [
-      blue,
-      Color(0xFF829DB6),
-      Color(0xFFBEAF8B),
-      gold,
-      teal,
-      Color(0xFF40515A),
-      Color(0xFF40515A),
-    ];
-    List<Widget> days = [];
-    for (int i = 0; i < labels.length; i++) {
-      days.add(
-        Column(
-          children: [
-            CircleAvatar(radius: 5, backgroundColor: colors[i]),
-            const SizedBox(height: 7),
-            Text(
-              labels[i],
-              style: TextStyle(
-                color: i == 4 ? teal : mutedColor(context),
-                fontSize: 12,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-    return days;
-  }
+  const WeekDots({super.key, required this.colors, required this.todayIndex});
+  final List<Color?> colors;
+  final int todayIndex;
 
   @override
   Widget build(BuildContext context) {
+    const labels = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: _buildDays(context),
+      children: [
+        for (int i = 0; i < labels.length; i++)
+          Column(
+            children: [
+              CircleAvatar(
+                radius: 5,
+                backgroundColor: colors[i] ?? const Color(0xFF40515A),
+              ),
+              const SizedBox(height: 7),
+              Text(
+                labels[i],
+                style: TextStyle(
+                  color: i == todayIndex ? teal : mutedColor(context),
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+      ],
     );
   }
 }
 
-class Quote extends StatelessWidget {
+// Frase del día, traída de una API por HTTP (QuoteService).
+class Quote extends StatefulWidget {
   const Quote({super.key, this.alignedLeft = false});
   final bool alignedLeft;
+
   @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: alignedLeft
-        ? CrossAxisAlignment.start
-        : CrossAxisAlignment.center,
-    children: [
-      SerifText(
-        '“Está bien no estar bien. Lo importante es\nseguir adelante.”',
-        color: mutedColor(context),
-        size: 16,
-        italic: true,
-      ),
-      if (alignedLeft) ...[
-        const SizedBox(height: 8),
-        Text(
-          'Frase del día',
-          style: TextStyle(color: mutedColor(context), fontSize: 12),
-        ),
-      ],
-    ],
-  );
+  State<Quote> createState() => _QuoteState();
 }
 
+class _QuoteState extends State<Quote> {
+  late final Future<DailyQuote> _quote = QuoteService.today();
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<DailyQuote>(
+      future: _quote,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return const SizedBox(height: 44);
+        final quote = snapshot.data!;
+        final align = widget.alignedLeft ? TextAlign.left : TextAlign.center;
+        return Column(
+          crossAxisAlignment: widget.alignedLeft
+              ? CrossAxisAlignment.start
+              : CrossAxisAlignment.center,
+          children: [
+            Text(
+              '“${quote.text}”',
+              textAlign: align,
+              style: TextStyle(
+                fontFamily: 'Georgia',
+                fontFamilyFallback: const ['serif'],
+                color: mutedColor(context),
+                fontSize: 16,
+                fontStyle: FontStyle.italic,
+                height: 1.25,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              [
+                if (widget.alignedLeft) 'Frase del día',
+                if (quote.author.isNotEmpty) quote.author,
+              ].join(' · '),
+              textAlign: align,
+              style: TextStyle(color: mutedColor(context), fontSize: 12),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
 class PrimaryButton extends StatelessWidget {
   const PrimaryButton({
     super.key,
@@ -436,7 +442,7 @@ class RecordCard extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    '${shortDay(record.date.weekday)} · ${record.date.day} sep',
+                    '${shortDay(record.date.weekday)} · ${record.date.day} ${shortMonth(record.date.month)}',
                     style: const TextStyle(
                       color: ink,
                       fontWeight: FontWeight.bold,
@@ -504,45 +510,15 @@ class DetailRow extends StatelessWidget {
   );
 }
 
+// Ánimo de cada día de la semana actual y promedio por día de la semana.
 class WeeklyPattern extends StatelessWidget {
-  const WeeklyPattern({super.key, required this.colors});
-  final List<Color> colors;
-  List<Widget> _buildMoodDots() {
-    const heights = [50.0, 65.0, 82.0, 110.0, 66.0, 110.0, 126.0];
-    List<Widget> dots = [];
-    for (int i = 0; i < colors.length; i++) {
-      dots.add(
-        Padding(
-          padding: EdgeInsets.only(bottom: heights[i]),
-          child: CircleAvatar(radius: 7, backgroundColor: colors[i]),
-        ),
-      );
-    }
-    return dots;
-  }
+  const WeeklyPattern({super.key, required this.week, required this.averages});
+  // Ánimo de lunes a domingo de esta semana (null = sin registro).
+  final List<double?> week;
+  // Promedio de todos los lunes, martes, etc. (null = sin registros).
+  final List<double?> averages;
 
-  List<Widget> _buildAverages() {
-    const labels = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
-    List<Widget> averages = [];
-    for (int i = 0; i < colors.length; i++) {
-      averages.add(
-        Container(
-          width: 43,
-          height: 38,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: colors[i],
-            borderRadius: BorderRadius.circular(11),
-          ),
-          child: Text(
-            labels[i],
-            style: const TextStyle(color: ink, fontWeight: FontWeight.bold),
-          ),
-        ),
-      );
-    }
-    return averages;
-  }
+  static const _labels = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
 
   @override
   Widget build(BuildContext context) => Column(
@@ -553,49 +529,34 @@ class WeeklyPattern extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Ánimo semanal',
+              'Ánimo de esta semana',
               style: TextStyle(color: ink, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
             SizedBox(
-              height: 140,
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    top: 45,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Color(0x99647AA2),
-                            Color(0x99E2A655),
-                            Color(0x99F18458),
-                          ],
-                          begin: Alignment.bottomLeft,
-                          end: Alignment.bottomRight,
-                        ),
+              height: 150,
+              width: double.infinity,
+              child: week.every((m) => m == null)
+                  ? const Center(
+                      child: Text(
+                        'Aún no hay registros esta semana',
+                        style: TextStyle(color: Color(0xFF777269)),
                       ),
-                    ),
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: _buildMoodDots(),
-                  ),
-                ],
-              ),
+                    )
+                  : CustomPaint(painter: _WeekChartPainter(week)),
             ),
             const SizedBox(height: 8),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // Cada letra va centrada en su columna, igual que los puntos.
+            Row(
               children: [
-                Text('L', style: TextStyle(color: Color(0xFF777269))),
-                Text('M', style: TextStyle(color: Color(0xFF777269))),
-                Text('M', style: TextStyle(color: Color(0xFF777269))),
-                Text('J', style: TextStyle(color: Color(0xFF777269))),
-                Text('V', style: TextStyle(color: Color(0xFF777269))),
-                Text('S', style: TextStyle(color: Color(0xFF777269))),
-                Text('D', style: TextStyle(color: Color(0xFF777269))),
+                for (final label in _labels)
+                  Expanded(
+                    child: Text(
+                      label,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: Color(0xFF777269)),
+                    ),
+                  ),
               ],
             ),
           ],
@@ -609,69 +570,122 @@ class WeeklyPattern extends StatelessWidget {
       const SizedBox(height: 10),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: _buildAverages(),
+        children: [
+          for (int i = 0; i < 7; i++)
+            Container(
+              width: 43,
+              height: 38,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: averages[i] == null
+                    ? const Color(0xFFDDD5C7)
+                    : EmotionalRecord.colorForMood(averages[i]!),
+                borderRadius: BorderRadius.circular(11),
+              ),
+              child: Text(
+                _labels[i],
+                style: const TextStyle(color: ink, fontWeight: FontWeight.bold),
+              ),
+            ),
+        ],
       ),
     ],
   );
 }
 
-class MonthlyPattern extends StatelessWidget {
-  const MonthlyPattern({super.key, required this.colors});
-  final List<Color> colors;
 
-  List<Widget> _buildWeeks(List<Color?> dots) {
-    List<Widget> weeks = [];
-    for (int week = 0; week < 4; week++) {
-      List<Widget> days = [];
-      for (int day = 0; day < 7; day++) {
-        Color? color = dots[week * 7 + day];
-        days.add(
-          Expanded(
-            child: Container(
-              height: 32,
-              margin: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: color ?? cream,
-                border: color == null
-                    ? Border.all(color: const Color(0xFFDDD5C7), width: 2)
-                    : null,
-              ),
-            ),
-          ),
-        );
-      }
-      weeks.add(Row(children: days));
-    }
-    return weeks;
+// Dibuja la "marea" de la semana: una línea suave que pasa por los días con
+// registro, el área de color debajo y un punto por día a la altura del ánimo.
+class _WeekChartPainter extends CustomPainter {
+  _WeekChartPainter(this.week);
+
+  final List<double?> week;
+
+  static const _pad = 12.0;
+
+  Offset _point(int day, double mood, Size size) {
+    final column = size.width / 7;
+    final x = column * day + column / 2;
+    final y = _pad + (1 - mood) * (size.height - 2 * _pad);
+    return Offset(x, y);
   }
 
   @override
+  void paint(Canvas canvas, Size size) {
+    // Líneas guía: muy bien, neutral y muy bajo.
+    final guide = Paint()
+      ..color = const Color(0xFFDDD5C7)
+      ..strokeWidth = 1;
+    for (final mood in [1.0, 0.5, 0.0]) {
+      final y = _point(0, mood, size).dy;
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), guide);
+    }
+
+    final points = <Offset>[];
+    final moods = <double>[];
+    for (var i = 0; i < week.length; i++) {
+      final mood = week[i];
+      if (mood == null) continue;
+      points.add(_point(i, mood, size));
+      moods.add(mood);
+    }
+
+    if (points.length >= 2) {
+      // Curva suave entre puntos consecutivos.
+      final line = Path()..moveTo(points.first.dx, points.first.dy);
+      for (var i = 1; i < points.length; i++) {
+        final a = points[i - 1];
+        final b = points[i];
+        final midX = (a.dx + b.dx) / 2;
+        line.cubicTo(midX, a.dy, midX, b.dy, b.dx, b.dy);
+      }
+
+      final bottom = size.height - _pad;
+      final area = Path.from(line)
+        ..lineTo(points.last.dx, bottom)
+        ..lineTo(points.first.dx, bottom)
+        ..close();
+      canvas.drawPath(
+        area,
+        Paint()
+          ..shader = const LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0x80F18458), Color(0x66E2A655), Color(0x40647AA2)],
+          ).createShader(Offset.zero & size),
+      );
+      canvas.drawPath(
+        line,
+        Paint()
+          ..color = ink.withValues(alpha: .55)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2.5
+          ..strokeCap = StrokeCap.round,
+      );
+    }
+
+    for (var i = 0; i < points.length; i++) {
+      canvas.drawCircle(points[i], 8, Paint()..color = Colors.white);
+      canvas.drawCircle(
+        points[i],
+        6,
+        Paint()..color = EmotionalRecord.colorForMood(moods[i]),
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(_WeekChartPainter old) => old.week != week;
+}
+
+// Calendario de las últimas 4 semanas con el color del ánimo de cada día.
+class MonthlyPattern extends StatelessWidget {
+  const MonthlyPattern({super.key, required this.days});
+  // 28 días, de lunes a domingo (null = sin registro).
+  final List<Color?> days;
+
+  @override
   Widget build(BuildContext context) {
-    final dots = <Color?>[
-      ...colors,
-      const Color(0xFF829DB6),
-      const Color(0xFF829DB6),
-      const Color(0xFFBEAF8B),
-      const Color(0xFFBEAF8B),
-      const Color(0xFF829DB6),
-      orange,
-      gold,
-      blue,
-      const Color(0xFFBEAF8B),
-      const Color(0xFFBEAF8B),
-      gold,
-      const Color(0xFFBEAF8B),
-      gold,
-      gold,
-      const Color(0xFF829DB6),
-      const Color(0xFFBEAF8B),
-      gold,
-      gold,
-      const Color(0xFF829DB6),
-      null,
-      null,
-    ];
     return CreamCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -694,7 +708,28 @@ class MonthlyPattern extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          ..._buildWeeks(dots),
+          for (int week = 0; week < 4; week++)
+            Row(
+              children: [
+                for (int day = 0; day < 7; day++)
+                  Expanded(
+                    child: Container(
+                      height: 32,
+                      margin: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: days[week * 7 + day] ?? cream,
+                        border: days[week * 7 + day] == null
+                            ? Border.all(
+                                color: const Color(0xFFDDD5C7),
+                                width: 2,
+                              )
+                            : null,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           const SizedBox(height: 16),
           Container(
             height: 7,
@@ -724,7 +759,6 @@ class MonthlyPattern extends StatelessWidget {
     );
   }
 }
-
 class ChoiceGroup extends StatelessWidget {
   const ChoiceGroup({
     super.key,
@@ -820,3 +854,22 @@ String longDay(int day) => const [
   'Sábado',
   'Domingo',
 ][day - 1];
+
+const _months = [
+  'enero',
+  'febrero',
+  'marzo',
+  'abril',
+  'mayo',
+  'junio',
+  'julio',
+  'agosto',
+  'septiembre',
+  'octubre',
+  'noviembre',
+  'diciembre',
+];
+
+String monthName(int month) => _months[month - 1];
+
+String shortMonth(int month) => _months[month - 1].substring(0, 3);

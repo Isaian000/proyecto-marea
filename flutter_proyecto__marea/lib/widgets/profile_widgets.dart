@@ -216,7 +216,7 @@ class ProfileLabeledDropdown extends StatelessWidget {
   });
 
   final String label;
-  final String value;
+  final String? value;
   final List<String> options;
   final ValueChanged<String> onChanged;
 
@@ -241,6 +241,7 @@ class ProfileLabeledDropdown extends StatelessWidget {
           dropdownColor: Colors.white,
           style: const TextStyle(color: AppColors.ink),
           decoration: profileInputDecoration(null),
+          hint: const Text('Selecciona'),
           items: _buildItems(),
           onChanged: (newValue) {
             if (newValue != null) onChanged(newValue);
@@ -254,7 +255,8 @@ class ProfileLabeledDropdown extends StatelessWidget {
 class ProfileSaveButton extends StatelessWidget {
   const ProfileSaveButton({super.key, required this.onPressed});
 
-  final VoidCallback onPressed;
+  // Si es null, el botón se muestra desactivado (por ejemplo, mientras guarda).
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {

@@ -139,7 +139,9 @@ class DarkTextField extends StatelessWidget {
 }
 
 class RatingCard extends StatelessWidget {
-  const RatingCard({super.key, required this.onReviews});
+  const RatingCard({super.key, required this.summary, required this.onReviews});
+  // Promedio de las reseñas guardadas en Firestore.
+  final ReviewSummary summary;
   final VoidCallback onReviews;
 
   @override
@@ -154,27 +156,37 @@ class RatingCard extends StatelessWidget {
         children: [
           const Icon(Icons.star, color: gold, size: 28),
           const SizedBox(width: 12),
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '4.78 de 5',
-                  style: TextStyle(
+                  summary.count == 0
+                      ? 'Sin calificaciones'
+                      : '${summary.average.toStringAsFixed(1)} de 5',
+                  style: const TextStyle(
                     color: ink,
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                   ),
                 ),
-                SizedBox(height: 2),
+                const SizedBox(height: 2),
                 Text(
-                  'Valoración del grupo',
-                  style: TextStyle(color: grey, fontSize: 13),
+                  summary.count == 0
+                      ? 'Sé la primera persona en calificar'
+                      : summary.count == 1
+                      ? 'Valoración del grupo · 1 reseña'
+                      : 'Valoración del grupo · ${summary.count} reseñas',
+                  style: const TextStyle(color: grey, fontSize: 13),
                 ),
               ],
             ),
           ),
-          CardButton(label: 'Reseñas', filled: false, onPressed: onReviews),
+          CardButton(
+            label: summary.myRating == null ? 'Calificar' : 'Tu reseña',
+            filled: false,
+            onPressed: onReviews,
+          ),
         ],
       ),
     );

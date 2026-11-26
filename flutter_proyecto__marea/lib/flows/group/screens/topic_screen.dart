@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/app_colors.dart';
 import '../../../core/app_theme.dart';
 import '../../../models/group_models.dart';
+import '../../../providers/group_provider.dart';
 import '../../../widgets/diary_widgets.dart';
 import '../../../widgets/group_widgets.dart';
+import '../group_navigation.dart';
 
+// Un tema con sus comentarios en tiempo real desde Firestore.
 class TopicScreen extends StatefulWidget {
-  const TopicScreen({super.key, required this.topic});
-  final Topic topic;
+  const TopicScreen({super.key, required this.topicId});
+  final String topicId;
 
   @override
   State<TopicScreen> createState() => _TopicScreenState();
@@ -16,12 +20,13 @@ class TopicScreen extends StatefulWidget {
 
 class _TopicScreenState extends State<TopicScreen> {
   final TextEditingController _controller = TextEditingController();
-  final List<TopicComment> _comments = [];
+  late final Stream<List<TopicComment>> _comments;
+  bool _sending = false;
 
   @override
   void initState() {
     super.initState();
-    _comments.addAll(widget.topic.comments);
+    _comments = context.read<GroupProvider>().comments(widget.topicId);
   }
 
   @override
@@ -30,43 +35,40 @@ class _TopicScreenState extends State<TopicScreen> {
     super.dispose();
   }
 
-  void _publish() {
-    String text = _controller.text.trim();
-    if (text.isEmpty) {
-      return;
+  Future<void> _publish(Topic topic) async {
+    final text = _controller.text.trim();
+    if (text.isEmpty || _sending) return;
+    setState(() => _sending = true);
+    try {
+      await context.read<GroupProvider>().addComment(topic, text);
+      _controller.clear();
+    } catch (e) {
+      debugPrint('No se pudo publicar el comentario: $e');
+      if (mounted) {
+        showGroupMessage(context, 'No se pudo publicar. Revisa tu conexión.');
+      }
     }
-    setState(() {
-      _comments.add(
-        TopicComment(
-          author: 'elena_m',
-          initials: 'EM',
-          time: 'Ahora',
-          text: text,
-          color: gold,
-        ),
-      );
-    });
-    _controller.clear();
+    if (mounted) setState(() => _sending = false);
   }
 
-  List<Widget> _buildComments() {
-    List<Widget> items = [];
-    for (int i = 0; i < _comments.length; i++) {
-      items.add(CommentTile(comment: _comments[i]));
+  Future<void> _vote(Topic topic) async {
+    try {
+      await context.read<GroupProvider>().toggleVote(topic);
+    } catch (e) {
+      debugPrint('No se pudo votar: $e');
+      if (mounted) showGroupMessage(context, 'No se pudo guardar tu voto.');
     }
-    if (items.isEmpty) {
-      items.add(
-        Text(
-          'Aún no hay comentarios. ¡Sé la primera persona en responder!',
-          style: TextStyle(color: mutedColor(context)),
-        ),
-      );
-    }
-    return items;
   }
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<GroupProvider>();
+    final topic = provider.topicById(widget.topicId);
+    if (topic == null) {
+      return const Scaffold(body: Center(child: Text('Este tema ya no existe')));
+    }
+    final voted = topic.votedBy(provider.uid);
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -83,14 +85,10 @@ class _TopicScreenState extends State<TopicScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  SerifText(
-                    widget.topic.title,
-                    size: 24,
-                    weight: FontWeight.bold,
-                  ),
+                  SerifText(topic.title, size: 24, weight: FontWeight.bold),
                   const SizedBox(height: 6),
                   Text(
-                    '${widget.topic.author} · ${widget.topic.time}',
+                    '${topic.author} · ${topic.time}',
                     style: TextStyle(color: mutedColor(context), fontSize: 15),
                   ),
                   const SizedBox(height: 18),
@@ -99,7 +97,7 @@ class _TopicScreenState extends State<TopicScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.topic.text,
+                          topic.text,
                           style: const TextStyle(
                             color: ink,
                             fontSize: 16,
@@ -107,9 +105,30 @@ class _TopicScreenState extends State<TopicScreen> {
                           ),
                         ),
                         const SizedBox(height: 12),
-                        Text(
-                          '${widget.topic.replies} respuestas · ${widget.topic.votes} votos',
-                          style: const TextStyle(color: grey, fontSize: 13),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '${topic.replies} respuestas · ${topic.votes} votos',
+                                style: const TextStyle(
+                                  color: grey,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ),
+                            TextButton.icon(
+                              onPressed: () => _vote(topic),
+                              icon: Icon(
+                                voted ? Icons.favorite : Icons.favorite_border,
+                                color: voted ? orange : grey,
+                                size: 18,
+                              ),
+                              label: Text(
+                                voted ? 'Votaste' : 'Votar',
+                                style: const TextStyle(color: ink),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -120,7 +139,33 @@ class _TopicScreenState extends State<TopicScreen> {
                     style: TextStyle(color: mutedColor(context), fontSize: 14),
                   ),
                   const SizedBox(height: 14),
-                  ..._buildComments(),
+                  StreamBuilder<List<TopicComment>>(
+                    stream: _comments,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Text(
+                          'No se pudieron cargar los comentarios.',
+                          style: TextStyle(color: mutedColor(context)),
+                        );
+                      }
+                      if (!snapshot.hasData) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      final comments = snapshot.data!;
+                      if (comments.isEmpty) {
+                        return Text(
+                          'Aún no hay comentarios. ¡Sé la primera persona en responder!',
+                          style: TextStyle(color: mutedColor(context)),
+                        );
+                      }
+                      return Column(
+                        children: [
+                          for (final comment in comments)
+                            CommentTile(comment: comment),
+                        ],
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
@@ -137,7 +182,7 @@ class _TopicScreenState extends State<TopicScreen> {
                   ),
                   const SizedBox(width: 10),
                   ElevatedButton(
-                    onPressed: _publish,
+                    onPressed: _sending ? null : () => _publish(topic),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: teal,
                       foregroundColor: ink,

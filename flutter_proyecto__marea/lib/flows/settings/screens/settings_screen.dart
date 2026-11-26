@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../../../app.dart';
+import '../../../providers/theme_provider.dart';
 import '../../../widgets/diary_widgets.dart';
 import '../../../widgets/profile_widgets.dart';
 import '../../../widgets/settings_widgets.dart';
@@ -21,9 +22,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _changeDarkMode(bool value) {
-    setState(() {
-      MareaApp.changeDarkMode(value);
-    });
+    context.read<ThemeProvider>().setDark(value);
   }
 
   @override
@@ -42,7 +41,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           icon: Icons.dark_mode_outlined,
           title: 'Modo oscuro',
           subtitle: 'Usa colores oscuros en toda la app',
-          value: MareaApp.darkMode,
+          value: context.watch<ThemeProvider>().isDark,
           onChanged: _changeDarkMode,
         ),
         const SizedBox(height: 28),

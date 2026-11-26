@@ -77,9 +77,16 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+<<<<<<< HEAD
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Usamos tu ubicación solo para mostrarte centros de apoyo psicológico cercanos. No se guarda.</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array><string>https</string><string>tel</string></array>
+=======
+	<key>FirebaseMessagingInstallationIdEnabled</key>
+	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Marea usa tu galería para elegir tu foto de perfil.</string>
+>>>>>>> b309ec9bcb73845411cf7366cfb63a524ca30f7e
 </dict>
 </plist>

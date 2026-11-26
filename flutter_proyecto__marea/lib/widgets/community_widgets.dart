@@ -69,9 +69,12 @@ class PrivacyLabel extends StatelessWidget {
           color: grey,
         ),
         const SizedBox(width: 6),
-        Text(
-          isPublic ? 'Público' : 'Privado',
-          style: const TextStyle(color: grey, fontSize: 13),
+        Flexible(
+          child: Text(
+            isPublic ? 'Público' : 'Privado',
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(color: grey, fontSize: 13),
+          ),
         ),
       ],
     );
@@ -125,12 +128,17 @@ class ForumCard extends StatelessWidget {
     required this.color,
     required this.isPublic,
     required this.onPressed,
+    this.actionLabel,
+    this.actionFilled,
   });
   final String title;
   final String subtitle;
   final Color color;
   final bool isPublic;
   final VoidCallback onPressed;
+  // Para cambiar el botón, por ejemplo "Unido" o "Solicitud enviada".
+  final String? actionLabel;
+  final bool? actionFilled;
 
   @override
   Widget build(BuildContext context) {
@@ -174,8 +182,9 @@ class ForumCard extends StatelessWidget {
             children: [
               Expanded(child: PrivacyLabel(isPublic: isPublic)),
               CardButton(
-                label: isPublic ? 'Unirse' : 'Mandar solicitud',
-                filled: isPublic,
+                label:
+                    actionLabel ?? (isPublic ? 'Unirse' : 'Mandar solicitud'),
+                filled: actionFilled ?? isPublic,
                 onPressed: onPressed,
               ),
             ],
